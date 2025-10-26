@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <title>قياس سرعة الإنترنت</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .loader {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid #ccc;
+      border-top: 3px solid #0078D7;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -15,9 +32,11 @@
       <p>الرفع: <span id="uploadSpeed">--</span> Mbps</p>
       <p>البينغ: <span id="ping">--</span> ms</p>
       <p>مزود الخدمة: <span id="isp">--</span></p>
+      <p>تحليل النتيجة: <span id="analysis">--</span></p>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/gh/librespeed/speedtest@latest/speedtest.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
