@@ -4,35 +4,29 @@
   <meta charset="UTF-8">
   <title>قياس سرعة الإنترنت</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    .loader {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 3px solid #ccc;
-      border-top: 3px solid #0078D7;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      vertical-align: middle;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="background"></div>
+
   <div class="container">
-    <h1>اختبار سرعة الإنترنت</h1>
-    <button onclick="startSpeedTest()">ابدأ القياس</button>
+    <h1>📡 اختبار سرعة الإنترنت</h1>
+    <button onclick="startSpeedTest()">🚀 ابدأ القياس</button>
+    <button onclick="toggleDarkMode()">🌓 تبديل الوضع الليلي</button>
 
     <div id="results">
-      <p>التحميل: <span id="downloadSpeed">--</span> Mbps</p>
-      <p>الرفع: <span id="uploadSpeed">--</span> Mbps</p>
-      <p>البينغ: <span id="ping">--</span> ms</p>
-      <p>مزود الخدمة: <span id="isp">--</span></p>
-      <p>تحليل النتيجة: <span id="analysis">--</span></p>
+      <div class="card">📥 التحميل: <span id="downloadSpeed">--</span> Mbps</div>
+      <div class="card">📤 الرفع: <span id="uploadSpeed">--</span> Mbps</div>
+      <div class="card">🎯 البينغ: <span id="ping">--</span> ms</div>
+      <div class="card">🏢 مزود الخدمة: <span id="isp">--</span></div>
+      <div class="analysis" id="analysis">--</div>
+      <button id="shareBtn" onclick="shareResults()">📤 مشاركة النتيجة</button>
+    </div>
+
+    <div class="about">
+      <h2>عن المشروع</h2>
+      <p>هذا الموقع يهدف إلى تقديم تجربة بسيطة وسريعة لقياس جودة اتصالك بالإنترنت، باستخدام مكتبة LibreSpeed المفتوحة المصدر، وتحليل النتائج بشكل ذكي ومبسط.</p>
+      <p>تم تطويره بواسطة عصام من جازان، ويخدم المجتمع المحلي في فهم أداء الشبكة ومزود الخدمة.</p>
     </div>
   </div>
 
