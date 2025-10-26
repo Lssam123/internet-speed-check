@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>قياس سرعة الإنترنت</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>اختبار سرعة الإنترنت</h1>
+    <button onclick="startSpeedTest()">ابدأ القياس</button>
+
+    <div id="results">
+      <p>التحميل: <span id="downloadSpeed">--</span> Mbps</p>
+      <p>الرفع: <span id="uploadSpeed">--</span> Mbps</p>
+      <p>البينغ: <span id="ping">--</span> ms</p>
+      <p>مزود الخدمة: <span id="isp">--</span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
