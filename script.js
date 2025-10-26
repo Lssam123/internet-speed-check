@@ -47,14 +47,35 @@ function analyzeResults() {
   const ping = parseFloat(document.getElementById("ping").textContent);
 
   let result = "";
+  let color = "";
 
   if (download >= 50 && upload >= 20 && ping <= 50) {
-    result = "ممتازة للبث والألعاب";
+    result = "✅ ممتازة للبث والألعاب";
+    color = "#c8e6c9";
   } else if (download >= 20 && upload >= 5 && ping <= 100) {
-    result = "جيدة للتصفح والمشاهدة";
+    result = "🟡 جيدة للتصفح والمشاهدة";
+    color = "#fff9c4";
   } else {
-    result = "ضعيفة، قد تواجه بطء أو تقطع";
+    result = "❌ ضعيفة، قد تواجه بطء أو تقطع";
+    color = "#ffcdd2";
   }
 
-  document.getElementById("analysis").textContent = result;
+  const analysisBox = document.getElementById("analysis");
+  analysisBox.textContent = result;
+  analysisBox.style.backgroundColor = color;
 }
+
+function shareResults() {
+  const download = document.getElementById("downloadSpeed").textContent;
+  const upload = document.getElementById("uploadSpeed").textContent;
+  const ping = document.getElementById("ping").textContent;
+  const isp = document.getElementById("isp").textContent;
+  const analysis = document.getElementById("analysis").textContent;
+
+  const message = `📡 نتائج قياس الإنترنت:\nتحميل: ${download} Mbps\nرفع: ${upload} Mbps\nبينغ: ${ping} ms\nمزود الخدمة: ${isp}\n${analysis}`;
+  const encoded = encodeURIComponent(message);
+  const url = `https://wa.me/?text=${encoded}`;
+  window.open(url, '_blank');
+}
+
+function toggle
