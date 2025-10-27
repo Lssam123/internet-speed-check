@@ -3,38 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="اختبار سرعة الإنترنت الحقيقي - قياس فعلي للتحميل والرفع بدقة عالية" />
+  <meta name="description" content="اختبار سرعة الإنترنت الحقيقي - قياس فعلي للتحميل بدقة عالية" />
   <title>اختبار سرعة الإنترنت</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" />
 </head>
 <body>
   <main class="container">
+    <!-- رأس الصفحة -->
     <header class="header fade-in">
-      <div class="logo-box">
-        <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" alt="أيقونة سرعة" class="logo" />
-        <div class="title-group">
-          <h1>اختبار سرعة الإنترنت</h1>
-          <p class="subtitle">قياس فعلي للتحميل والرفع بدون تخزين</p>
-        </div>
-      </div>
+      <h1>اختبار سرعة الإنترنت</h1>
+      <p class="subtitle">قياس فعلي للسرعة بدون مؤثرات وهمية</p>
     </header>
 
-    <section class="meter fade-in">
-      <div class="circle" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <svg class="progress-ring" width="160" height="160">
-          <circle class="ring-bg" cx="80" cy="80" r="70" />
-          <circle class="ring-fill" cx="80" cy="80" r="70" />
-        </svg>
-        <div class="circle-content">
-          <span id="upload">0.00</span>
-          <small>سرعة الرفع</small>
-        </div>
+    <!-- أزرار التحكم -->
+    <section class="actions fade-in">
+      <div class="button-group">
+        <button class="btn primary" onclick="ابدأ_الاختبار()">بدء الاختبار</button>
+        <button class="btn secondary" onclick="إعادة_الاختبار()">إعادة الاختبار</button>
       </div>
-      <p id="status">اضغط على الزر لبدء الاختبار</p>
-      <p id="timer" class="timer">الوقت المتبقي: -- ثانية</p>
     </section>
 
+    <!-- النتائج -->
     <section class="results fade-in">
       <div class="result-box">
         <span class="label">سرعة التحميل:</span>
@@ -51,6 +40,7 @@
       </div>
     </section>
 
+    <!-- معلومات الاتصال -->
     <section class="connection-info fade-in">
       <p>نوع الاتصال: <span id="connection-type">--</span></p>
       <p>الوقت الحالي: <span id="current-time">--:--</span></p>
@@ -59,20 +49,21 @@
       <p>التاريخ: <span id="year">2026</span></p>
     </section>
 
+    <!-- الرسم البياني -->
     <section class="chart-section fade-in">
       <h2>تطور السرعة أثناء الاختبار</h2>
       <canvas id="speedChart" width="100%" height="300"></canvas>
     </section>
 
+    <!-- نسخ ومشاركة -->
     <section class="actions fade-in">
       <div class="button-group">
-        <button class="btn primary" onclick="ابدأ_الاختبار()">ابدأ الاختبار</button>
-        <button class="btn secondary" onclick="إعادة_الاختبار()">إعادة الاختبار</button>
         <button class="btn copy" onclick="نسخ_النتيجة()">نسخ النتيجة</button>
         <button class="btn share" onclick="مشاركة_النتيجة()">مشاركة النتيجة</button>
       </div>
     </section>
 
+    <!-- التذييل -->
     <footer class="footer fade-in">
       <p>متدربين كلية العيدابي © 2026</p>
     </footer>
