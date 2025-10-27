@@ -9,26 +9,28 @@
 <body>
   <div class="container">
     <h1>اختبار سرعة الإنترنت</h1>
+    
     <div class="meter">
       <div class="circle">
-        <span id="status">اضغط لبدء الاختبار</span>
+        <span id="download">--</span>
+        <small>ميجابت/ثانية</small>
       </div>
+      <p id="status">اضغط لبدء الاختبار</p>
     </div>
+
     <button onclick="ابدأ_الاختبار()">ابدأ الاختبار</button>
+
     <div class="results">
-      <p>📥 سرعة التحميل: <span id="download">--</span> ميجابت/ثانية</p>
       <p>📤 سرعة الرفع: <span id="upload">--</span> ميجابت/ثانية</p>
     </div>
+
     <canvas id="الرسم_البياني"></canvas>
-    <div class="future">
-      <h2>ميزات مستقبلية (غير مفعّلة)</h2>
-      <ul>
-        <li>🔗 مشاركة النتائج عبر رابط</li>
-        <li>📍 تحديد الموقع ومزود الخدمة تلقائيًا</li>
-        <li>📁 تصدير النتائج بصيغة PDF أو CSV</li>
-      </ul>
-    </div>
+
+    <footer>
+      <p>متدربين كلية العيدابي</p>
+    </footer>
+
+    <script src="script.js"></script>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
