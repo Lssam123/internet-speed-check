@@ -1,7 +1,6 @@
 function ابدأ_الاختبار() {
   document.getElementById("status").innerText = "جاري الاختبار...";
 
-  // محاكاة اختبار السرعة (بدون حفظ أو تخزين)
   setTimeout(() => {
     const downloadSpeed = (Math.random() * 100).toFixed(2);
     const uploadSpeed = (Math.random() * 50).toFixed(2);
@@ -10,7 +9,6 @@ function ابدأ_الاختبار() {
     document.getElementById("upload").innerText = uploadSpeed;
     document.getElementById("status").innerText = "تم الاختبار ✅";
 
-    // رسم بياني بسيط
     const canvas = document.getElementById("الرسم_البياني");
     const ctx = canvas.getContext("2d");
     canvas.width = 300;
