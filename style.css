@@ -3,7 +3,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Cairo', sans-serif;
-  background-color: #f0f4f8;
+  background: linear-gradient(to bottom, #e0f7fa, #ffffff);
   text-align: center;
   direction: rtl;
 }
@@ -20,62 +20,70 @@ html, body {
 
 h1 {
   color: #0077b6;
-  margin-bottom: 20px;
+  font-size: 24px;
+  margin-bottom: 30px;
 }
 
 .meter {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .circle {
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
-  border: 12px solid #00b4d8;
+  border: 14px solid #00b4d8;
+  background-color: #ffffff;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: 28px;
-  background-color: #ffffff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  align-items: center;
+  font-size: 32px;
+  color: #0077b6;
 }
 
 .circle small {
-  font-size: 14px;
+  font-size: 16px;
   color: #555;
   margin-top: 5px;
 }
 
 #status {
-  margin-top: 10px;
+  margin-top: 15px;
   font-size: 18px;
-  color: #0077b6;
+  color: #023e8a;
 }
 
 .results {
-  font-size: 18px;
-  margin: 10px 0 20px;
+  font-size: 20px;
+  margin: 20px 0;
+  color: #333;
 }
 
 button {
   width: 80%;
   max-width: 300px;
-  padding: 10px;
+  padding: 12px;
   font-size: 18px;
   background-color: #0077b6;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #005f8c;
 }
 
 footer {
   margin-top: auto;
   font-size: 16px;
   color: #555;
+  padding: 10px;
 }
