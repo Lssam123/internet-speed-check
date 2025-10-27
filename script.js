@@ -1,10 +1,7 @@
 // عناصر الواجهة
-const uploadEl = document.getElementById("upload");
 const downloadEl = document.getElementById("download");
 const uploadFinalEl = document.getElementById("upload-final");
 const qualityEl = document.getElementById("quality");
-const statusEl = document.getElementById("status");
-const timerEl = document.getElementById("timer");
 const connectionTypeEl = document.getElementById("connection-type");
 const currentTimeEl = document.getElementById("current-time");
 const timezoneEl = document.getElementById("timezone");
@@ -50,13 +47,6 @@ const speedChart = new Chart(ctx, {
         backgroundColor: "rgba(0, 119, 182, 0.1)",
         tension: 0.4,
       },
-      {
-        label: "رفع",
-        data: [],
-        borderColor: "#00b4d8",
-        backgroundColor: "rgba(0, 180, 216, 0.1)",
-        tension: 0.4,
-      },
     ],
   },
   options: {
@@ -72,24 +62,6 @@ const speedChart = new Chart(ctx, {
     },
   },
 });
-
-// تحديث العداد الدائري
-function تحديث_العداد(نسبة) {
-  const الدائرة = document.querySelector(".ring-fill");
-  const الحد_الأقصى = 440;
-  const القيمة = Math.min(نسبة, 100);
-  const الإزاحة = الحد_الأقصى - (القيمة / 100) * الحد_الأقصى;
-  الدائرة.style.strokeDashoffset = الإزاحة;
-}
-
-// تمييز بصري عند التحديث
-function تمييز_النتيجة(العنصر) {
-  العنصر.style.transition = "background 0.3s ease";
-  العنصر.style.background = "#dff9fb";
-  setTimeout(() => {
-    العنصر.style.background = "";
-  }, 600);
-}
 
 // قياس سرعة التحميل الحقيقي
 async function قياس_سرعة_التحميل() {
@@ -112,9 +84,6 @@ async function قياس_سرعة_التحميل() {
 // بدء الاختبار
 async function ابدأ_الاختبار() {
   إعادة_الاختبار();
-  statusEl.textContent = "جاري قياس سرعة التحميل...";
-  تحديث_العداد(10);
-
   const النتيجة = await قياس_سرعة_التحميل();
 
   if (النتيجة) {
@@ -122,21 +91,18 @@ async function ابدأ_الاختبار() {
     const زمن = parseFloat(النتيجة.الزمن);
 
     downloadEl.textContent = سرعة;
-    uploadEl.textContent = "0.00";
     uploadFinalEl.textContent = "0.00";
-    تحديث_العداد(سرعة);
     تحليل_الجودة(سرعة, 0, زمن);
-    statusEl.textContent = "تم القياس بنجاح";
 
     // تحديث الرسم البياني
     for (let i = 1; i <= زمن; i++) {
       speedChart.data.labels.push(i);
       speedChart.data.datasets[0].data.push((سرعة / زمن * i).toFixed(2));
-      speedChart.data.datasets[1].data.push("0.00");
     }
     speedChart.update();
   } else {
-    statusEl.textContent = "تعذر القياس. تحقق من الاتصال.";
+    downloadEl.textContent = "تعذر القياس";
+    qualityEl.textContent = "جودة الاتصال: غير متاحة";
   }
 }
 
@@ -157,22 +123,16 @@ function تحليل_الجودة(تحميل, رفع, زمن) {
 
   qualityEl.textContent = `جودة الاتصال: ${الجودة}`;
   qualityEl.style.color = اللون;
-  تمييز_النتيجة(qualityEl);
 }
 
 // إعادة الاختبار
 function إعادة_الاختبار() {
-  uploadEl.textContent = "0.00";
   downloadEl.textContent = "--";
   uploadFinalEl.textContent = "--";
   qualityEl.textContent = "جودة الاتصال: --";
   qualityEl.style.color = "#219ebc";
-  statusEl.textContent = "اضغط على الزر لبدء الاختبار";
-  timerEl.textContent = "";
-  تحديث_العداد(0);
   speedChart.data.labels = [];
   speedChart.data.datasets[0].data = [];
-  speedChart.data.datasets[1].data = [];
   speedChart.update();
 }
 
