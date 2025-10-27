@@ -8,19 +8,72 @@ const timerEl = document.getElementById("timer");
 const connectionTypeEl = document.getElementById("connection-type");
 const currentTimeEl = document.getElementById("current-time");
 const timezoneEl = document.getElementById("timezone");
+const ispEl = document.getElementById("isp");
+const yearEl = document.getElementById("year");
 
-// إعداد الوقت الحالي والمنطقة
+// إعداد الوقت والمنطقة والتاريخ
 function تحديث_الوقت() {
   const الآن = new Date();
   currentTimeEl.textContent = الآن.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" });
   timezoneEl.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  yearEl.textContent = "2026";
 }
 تحديث_الوقت();
 
-// نوع الاتصال (محاكاة)
+// نوع الاتصال
 connectionTypeEl.textContent = navigator.connection?.effectiveType || "غير معروف";
 
-// تأثير بصري للعداد
+// جلب مزود الخدمة باستخدام ipinfo.io
+function جلب_مزود_الخدمة() {
+  fetch("https://ipinfo.io/json?token=e217c8f34c0cfe")
+    .then(response => response.json())
+    .then(data => {
+      ispEl.textContent = data.org || "غير معروف";
+    })
+    .catch(() => {
+      ispEl.textContent = "غير متاح";
+    });
+}
+جلب_مزود_الخدمة();
+
+// إعداد الرسم البياني
+const ctx = document.getElementById("speedChart").getContext("2d");
+const speedChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: "تحميل",
+        data: [],
+        borderColor: "#0077b6",
+        backgroundColor: "rgba(0, 119, 182, 0.1)",
+        tension: 0.4,
+      },
+      {
+        label: "رفع",
+        data: [],
+        borderColor: "#00b4d8",
+        backgroundColor: "rgba(0, 180, 216, 0.1)",
+        tension: 0.4,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: "ميجابت/ثانية" },
+      },
+      x: {
+        title: { display: true, text: "الثواني" },
+      },
+    },
+  },
+});
+
+// تحديث العداد الدائري
 function تحديث_العداد(نسبة) {
   const الدائرة = document.querySelector(".ring-fill");
   const الحد_الأقصى = 440;
@@ -29,7 +82,7 @@ function تحديث_العداد(نسبة) {
   الدائرة.style.strokeDashoffset = الإزاحة;
 }
 
-// تأثير بصري عند تحديث النتائج
+// تمييز بصري عند التحديث
 function تمييز_النتيجة(العنصر) {
   العنصر.style.transition = "background 0.3s ease";
   العنصر.style.background = "#dff9fb";
@@ -38,41 +91,56 @@ function تمييز_النتيجة(العنصر) {
   }, 600);
 }
 
-// بدء الاختبار
-function ابدأ_الاختبار() {
-  إعادة_الاختبار();
-  statusEl.textContent = "📡 جاري قياس السرعة...";
-  let الوقت = 10;
-  let سرعة_التحميل = 0;
-  let سرعة_الرفع = 0;
-
-  const مؤقت = setInterval(() => {
-    الوقت--;
-    timerEl.textContent = `⏱ الوقت المتبقي: ${الوقت} ثانية`;
-
-    // محاكاة السرعة بتدرج واقعي
-    سرعة_التحميل += Math.random() * 4 + 1;
-    سرعة_الرفع += Math.random() * 1.5 + 0.5;
-
-    downloadEl.textContent = سرعة_التحميل.toFixed(2);
-    uploadEl.textContent = سرعة_الرفع.toFixed(2);
-
-    تحديث_العداد(سرعة_الرفع * 4);
-    تمييز_النتيجة(downloadEl);
-    تمييز_النتيجة(uploadEl);
-
-    if (الوقت <= 0) {
-      clearInterval(مؤقت);
-      statusEl.textContent = "✅ تم القياس بنجاح";
-      timerEl.textContent = "";
-
-      uploadFinalEl.textContent = سرعة_الرفع.toFixed(2);
-      تحليل_الجودة(سرعة_التحميل, سرعة_الرفع, 10);
-    }
-  }, 1000);
+// قياس سرعة التحميل الحقيقي
+async function قياس_سرعة_التحميل() {
+  const رابط = "https://speed.hetzner.de/10MB.bin";
+  const حجم_ميجا = 10;
+  const البداية = performance.now();
+  try {
+    const response = await fetch(`${رابط}?nocache=${Math.random()}`, { cache: "no-store" });
+    await response.blob();
+    const النهاية = performance.now();
+    const الزمن = (النهاية - البداية) / 1000;
+    const السرعة = (حجم_ميجا * 8) / الزمن;
+    return { السرعة: السرعة.toFixed(2), الزمن: الزمن.toFixed(1) };
+  } catch (error) {
+    console.error("خطأ في التحميل:", error);
+    return null;
+  }
 }
 
-// تحليل جودة الاتصال بناءً على التحميل والرفع والزمن
+// بدء الاختبار
+async function ابدأ_الاختبار() {
+  إعادة_الاختبار();
+  statusEl.textContent = "جاري قياس سرعة التحميل...";
+  تحديث_العداد(10);
+
+  const النتيجة = await قياس_سرعة_التحميل();
+
+  if (النتيجة) {
+    const سرعة = parseFloat(النتيجة.السرعة);
+    const زمن = parseFloat(النتيجة.الزمن);
+
+    downloadEl.textContent = سرعة;
+    uploadEl.textContent = "0.00";
+    uploadFinalEl.textContent = "0.00";
+    تحديث_العداد(سرعة);
+    تحليل_الجودة(سرعة, 0, زمن);
+    statusEl.textContent = "تم القياس بنجاح";
+
+    // تحديث الرسم البياني
+    for (let i = 1; i <= زمن; i++) {
+      speedChart.data.labels.push(i);
+      speedChart.data.datasets[0].data.push((سرعة / زمن * i).toFixed(2));
+      speedChart.data.datasets[1].data.push("0.00");
+    }
+    speedChart.update();
+  } else {
+    statusEl.textContent = "تعذر القياس. تحقق من الاتصال.";
+  }
+}
+
+// تحليل جودة الاتصال
 function تحليل_الجودة(تحميل, رفع, زمن) {
   const متوسط = (تحميل + رفع) / 2;
   const كفاءة = متوسط / زمن;
@@ -87,7 +155,7 @@ function تحليل_الجودة(تحميل, رفع, زمن) {
     اللون = "#f4a261";
   }
 
-  qualityEl.textContent = `📊 جودة الاتصال: ${الجودة}`;
+  qualityEl.textContent = `جودة الاتصال: ${الجودة}`;
   qualityEl.style.color = اللون;
   تمييز_النتيجة(qualityEl);
 }
@@ -102,16 +170,20 @@ function إعادة_الاختبار() {
   statusEl.textContent = "اضغط على الزر لبدء الاختبار";
   timerEl.textContent = "";
   تحديث_العداد(0);
+  speedChart.data.labels = [];
+  speedChart.data.datasets[0].data = [];
+  speedChart.data.datasets[1].data = [];
+  speedChart.update();
 }
 
 // نسخ النتيجة
 function نسخ_النتيجة() {
-  const نص = `📥 تحميل: ${downloadEl.textContent} Mbps\n📤 رفع: ${uploadFinalEl.textContent} Mbps\n${qualityEl.textContent}`;
+  const نص = `سرعة التحميل: ${downloadEl.textContent} Mbps\nسرعة الرفع: ${uploadFinalEl.textContent} Mbps\n${qualityEl.textContent}`;
   navigator.clipboard.writeText(نص);
-  alert("✅ تم نسخ النتيجة إلى الحافظة");
+  alert("تم نسخ النتيجة إلى الحافظة");
 }
 
 // مشاركة النتيجة (محاكاة)
 function مشاركة_النتيجة() {
-  alert("📤 ميزة المشاركة غير مفعلة حاليًا");
+  alert("ميزة المشاركة غير مفعلة حاليًا");
 }
