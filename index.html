@@ -1,36 +1,34 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>قياس سرعة الإنترنت</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار سرعة الإنترنت</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="background"></div>
-
   <div class="container">
-    <h1>📡 اختبار سرعة الإنترنت</h1>
-    <button onclick="startSpeedTest()">🚀 ابدأ القياس</button>
-    <button onclick="toggleDarkMode()">🌓 تبديل الوضع الليلي</button>
-
-    <div id="results">
-      <div class="card">📥 التحميل: <span id="downloadSpeed">--</span> Mbps</div>
-      <div class="card">📤 الرفع: <span id="uploadSpeed">--</span> Mbps</div>
-      <div class="card">🎯 البينغ: <span id="ping">--</span> ms</div>
-      <div class="card">🏢 مزود الخدمة: <span id="isp">--</span></div>
-      <div class="analysis" id="analysis">--</div>
-      <button id="shareBtn" onclick="shareResults()">📤 مشاركة النتيجة</button>
+    <h1>اختبار سرعة الإنترنت</h1>
+    <div class="meter">
+      <div class="circle">
+        <span id="status">اضغط لبدء الاختبار</span>
+      </div>
     </div>
-
-    <div class="about">
-      <h2>عن المشروع</h2>
-      <p>هذا الموقع يهدف إلى تقديم تجربة بسيطة وسريعة لقياس جودة اتصالك بالإنترنت، باستخدام مكتبة LibreSpeed المفتوحة المصدر، وتحليل النتائج بشكل ذكي ومبسط.</p>
-      <p>تم تطويره بواسطة عصام من جازان، ويخدم المجتمع المحلي في فهم أداء الشبكة ومزود الخدمة.</p>
+    <button onclick="ابدأ_الاختبار()">ابدأ الاختبار</button>
+    <div class="results">
+      <p>📥 سرعة التحميل: <span id="download">--</span> ميجابت/ثانية</p>
+      <p>📤 سرعة الرفع: <span id="upload">--</span> ميجابت/ثانية</p>
+    </div>
+    <canvas id="الرسم_البياني"></canvas>
+    <div class="future">
+      <h2>ميزات مستقبلية (غير مفعّلة)</h2>
+      <ul>
+        <li>🔗 مشاركة النتائج عبر رابط</li>
+        <li>📍 تحديد الموقع ومزود الخدمة تلقائيًا</li>
+        <li>📁 تصدير النتائج بصيغة PDF أو CSV</li>
+      </ul>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/gh/librespeed/speedtest@latest/speedtest.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
