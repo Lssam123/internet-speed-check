@@ -3,25 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="اختبار سرعة الإنترنت الحقيقي - قياس مباشر للتحميل والرفع بدقة عالية" />
+  <meta name="description" content="اختبار سرعة الإنترنت الحقيقي - قياس فعلي للتحميل والرفع بدقة عالية" />
   <title>اختبار سرعة الإنترنت</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" />
 </head>
 <body>
   <main class="container">
-    <!-- رأس الصفحة -->
     <header class="header fade-in">
       <div class="logo-box">
         <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" alt="أيقونة سرعة" class="logo" />
         <div class="title-group">
           <h1>اختبار سرعة الإنترنت</h1>
-          <p class="subtitle">قياس مباشر للتحميل والرفع بدقة عالية</p>
+          <p class="subtitle">قياس فعلي للتحميل والرفع بدون تخزين</p>
         </div>
       </div>
     </header>
 
-    <!-- عداد السرعة -->
     <section class="meter fade-in">
       <div class="circle" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <svg class="progress-ring" width="160" height="160">
@@ -30,22 +28,21 @@
         </svg>
         <div class="circle-content">
           <span id="upload">0.00</span>
-          <small>📤 سرعة الرفع</small>
+          <small>سرعة الرفع</small>
         </div>
       </div>
       <p id="status">اضغط على الزر لبدء الاختبار</p>
       <p id="timer" class="timer">الوقت المتبقي: -- ثانية</p>
     </section>
 
-    <!-- نتائج التحميل -->
     <section class="results fade-in">
       <div class="result-box">
-        <span class="label">📥 سرعة التحميل:</span>
+        <span class="label">سرعة التحميل:</span>
         <span id="download">--</span>
         <span class="unit">ميجابت/ثانية</span>
       </div>
       <div class="result-box">
-        <span class="label">📤 سرعة الرفع:</span>
+        <span class="label">سرعة الرفع:</span>
         <span id="upload-final">--</span>
         <span class="unit">ميجابت/ثانية</span>
       </div>
@@ -54,29 +51,34 @@
       </div>
     </section>
 
-    <!-- معلومات الاتصال -->
     <section class="connection-info fade-in">
-      <p>📶 نوع الاتصال: <span id="connection-type">--</span></p>
-      <p>🕒 الوقت الحالي: <span id="current-time">--:--</span></p>
-      <p>🌍 المنطقة الزمنية: <span id="timezone">--</span></p>
+      <p>نوع الاتصال: <span id="connection-type">--</span></p>
+      <p>الوقت الحالي: <span id="current-time">--:--</span></p>
+      <p>المنطقة الزمنية: <span id="timezone">--</span></p>
+      <p>مزود الخدمة: <span id="isp">--</span></p>
+      <p>التاريخ: <span id="year">2026</span></p>
     </section>
 
-    <!-- أزرار التحكم -->
+    <section class="chart-section fade-in">
+      <h2>تطور السرعة أثناء الاختبار</h2>
+      <canvas id="speedChart" width="100%" height="300"></canvas>
+    </section>
+
     <section class="actions fade-in">
       <div class="button-group">
-        <button class="btn primary" onclick="ابدأ_الاختبار()">🚀 ابدأ الاختبار</button>
-        <button class="btn secondary" onclick="إعادة_الاختبار()">🔄 إعادة الاختبار</button>
-        <button class="btn copy" onclick="نسخ_النتيجة()">📋 نسخ النتيجة</button>
-        <button class="btn share" onclick="مشاركة_النتيجة()">📤 مشاركة النتيجة</button>
+        <button class="btn primary" onclick="ابدأ_الاختبار()">ابدأ الاختبار</button>
+        <button class="btn secondary" onclick="إعادة_الاختبار()">إعادة الاختبار</button>
+        <button class="btn copy" onclick="نسخ_النتيجة()">نسخ النتيجة</button>
+        <button class="btn share" onclick="مشاركة_النتيجة()">مشاركة النتيجة</button>
       </div>
     </section>
 
-    <!-- التذييل -->
     <footer class="footer fade-in">
-      <p>متدربين كلية العيدابي © 2025</p>
+      <p>متدربين كلية العيدابي © 2026</p>
     </footer>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
