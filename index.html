@@ -9,20 +9,20 @@
 <body>
   <div class="container">
     <h1>اختبار سرعة الإنترنت</h1>
-    
+
     <div class="meter">
       <div class="circle">
-        <span id="download">--</span>
-        <small>ميجابت/ثانية</small>
+        <span id="upload">0</span>
+        <small>📤 سرعة الرفع (ميجابت/ثانية)</small>
       </div>
       <p id="status">اضغط لبدء الاختبار</p>
     </div>
 
-    <button onclick="ابدأ_الاختبار()">ابدأ الاختبار</button>
-
     <div class="results">
-      <p>📤 سرعة الرفع: <span id="upload">--</span> ميجابت/ثانية</p>
+      <p>📥 سرعة التحميل: <span id="download">--</span> ميجابت/ثانية</p>
     </div>
+
+    <button onclick="ابدأ_الاختبار()">ابدأ الاختبار</button>
 
     <canvas id="الرسم_البياني"></canvas>
 
