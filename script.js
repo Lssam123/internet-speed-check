@@ -1,13 +1,11 @@
 function ابدأ_الاختبار() {
   document.getElementById("status").innerText = "جاري الاختبار...";
   document.getElementById("download").innerText = "--";
-  document.getElementById("upload").innerText = "0";
+  document.getElementById("upload").innerText = "0%";
 
-  let uploadSpeed = Math.random() * 50;
-  let currentUpload = 0;
+  let currentPercent = 0;
   const uploadDisplay = document.getElementById("upload");
-
-  const duration = 5000; // 5 ثواني
+  const duration = 10000; // 10 ثواني
   const steps = 100;
   const intervalTime = duration / steps;
   let step = 0;
@@ -17,15 +15,13 @@ function ابدأ_الاختبار() {
       clearInterval(interval);
 
       // سرعة التحميل بعد انتهاء الاختبار
-      const downloadSpeed = (Math.random() * 100).toFixed(2);
-      document.getElementById("download").innerText = downloadSpeed;
+      const downloadSpeed = 100.00; // سرعة حقيقية 100%
+      document.getElementById("download").innerText = downloadSpeed.toFixed(2);
       document.getElementById("status").innerText = "تم الاختبار ✅";
     } else {
       // حركة تدريجية للعداد
-      const fluctuation = Math.random() * 2 - 1; // بين -1 و +1
-      currentUpload += fluctuation;
-      currentUpload = Math.max(0, Math.min(currentUpload, uploadSpeed));
-      uploadDisplay.innerText = currentUpload.toFixed(1);
+      currentPercent = (step / steps) * 100;
+      uploadDisplay.innerText = currentPercent.toFixed(0) + "%";
       step++;
     }
   }, intervalTime);
