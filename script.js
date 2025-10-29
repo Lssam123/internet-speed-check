@@ -6,13 +6,14 @@ const currentTimeEl = document.getElementById("current-time");
 const timezoneEl = document.getElementById("timezone");
 const ispEl = document.getElementById("isp");
 const yearEl = document.getElementById("year");
+const ledEl = document.getElementById("led");
 
 // الوقت والمنطقة
 function تحديث_الوقت() {
   const الآن = new Date();
   currentTimeEl.textContent = الآن.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" });
   timezoneEl.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  yearEl.textContent = "2026";
+  yearEl.textContent = الآن.getFullYear();
 }
 تحديث_الوقت();
 
@@ -41,15 +42,15 @@ const speedChart = new Chart(ctx, {
     datasets: [{
       label: "تحميل",
       data: [],
-      borderColor: "#0077b6",
-      backgroundColor: "rgba(0, 119, 182, 0.1)",
+      borderColor: "#00b4d8",
+      backgroundColor: "rgba(0, 180, 216, 0.1)",
       tension: 0.4,
     }],
   },
   options: {
     responsive: true,
     scales: {
-      y: { beginAtZero: true, title: { display: true, text: "ميجابت/ثانية" } },
+      y: { beginAtZero: true, title: { display: true, text: "Mbps" } },
       x: { title: { display: true, text: "الثواني" } },
     },
   },
@@ -101,27 +102,33 @@ async function ابدأ_الاختبار() {
     speedChart.update();
   } else {
     downloadEl.textContent = "تعذر القياس";
+    uploadFinalEl.textContent = "--";
     qualityEl.textContent = "جودة الاتصال: غير متاحة";
+    ledEl.className = "status-led bad";
   }
 }
 
-// تحليل الجودة
+// تحليل الجودة وتغيير اللمبة
 function تحليل_الجودة(تحميل, رفع, زمن) {
   const متوسط = (تحميل + رفع) / 2;
   const كفاءة = متوسط / زمن;
   let الجودة = "ضعيف";
-  let اللون = "#d62828";
+  let اللون = "#e74c3c";
+  let ledClass = "bad";
 
   if (كفاءة > 3) {
     الجودة = "ممتاز";
-    اللون = "#2a9d8f";
+    اللون = "#2ecc71";
+    ledClass = "good";
   } else if (كفاءة > 1.5) {
     الجودة = "جيد";
     اللون = "#f4a261";
+    ledClass = "good";
   }
 
   qualityEl.textContent = `جودة الاتصال: ${الجودة}`;
   qualityEl.style.color = اللون;
+  ledEl.className = `status-led ${ledClass}`;
 }
 
 // إعادة الاختبار
@@ -129,7 +136,8 @@ function إعادة_الاختبار() {
   downloadEl.textContent = "--";
   uploadFinalEl.textContent = "--";
   qualityEl.textContent = "جودة الاتصال: --";
-  qualityEl.style.color = "#219ebc";
+  qualityEl.style.color = "#ccc";
+  ledEl.className = "status-led";
   speedChart.data.labels = [];
   speedChart.data.datasets[0].data = [];
   speedChart.update();
