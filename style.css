@@ -1,190 +1,44 @@
-/* إعدادات عامة */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Cairo', sans-serif;
-}
-
 body {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #f1f1f1;
-  min-height: 100vh;
+  background: linear-gradient(135deg, #fceabb, #f8b500);
+  font-family: 'Cairo', sans-serif;
   display: flex;
   justify-content: center;
-  align-items: start;
-  padding: 20px;
-}
-
-/* صندوق الراوتر */
-.router-box {
-  width: 100%;
-  max-width: 800px;
-  background: #1c1c1c;
-  border-radius: 24px;
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
-  padding: 30px;
-  border: 2px solid #00b4d8;
-}
-
-/* رأس الراوتر */
-.router-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  height: 100vh;
+  margin: 0;
 }
 
-.router-header h1 {
+.points-box {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+h1 {
   font-size: 24px;
-  color: #00b4d8;
-}
-
-.status-led {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: #999;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.status-led.good {
-  background-color: #2ecc71;
-  box-shadow: 0 0 12px #2ecc71;
-}
-
-.status-led.bad {
-  background-color: #e74c3c;
-  box-shadow: 0 0 12px #e74c3c;
-}
-
-/* شاشة النتائج */
-.router-screen {
-  background: #111;
-  border-radius: 16px;
-  padding: 20px;
   margin-bottom: 20px;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  color: #333;
 }
 
-.screen-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 18px;
-  margin-bottom: 12px;
-  color: #f1f1f1;
-}
-
-.unit {
-  margin-right: 6px;
-  color: #aaa;
-}
-
-/* أزرار التحكم */
-.router-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center;
-  margin-bottom: 25px;
+.counter {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #0077b6;
 }
 
 .btn {
-  padding: 12px 20px;
-  font-size: 16px;
+  padding: 14px 28px;
+  font-size: 18px;
+  background: #00b4d8;
+  color: white;
   border: none;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-}
-
-.btn.primary {
-  background: linear-gradient(to right, #00b4d8, #0077b6);
-  color: white;
-}
-
-.btn.secondary {
-  background-color: #333;
-  color: #00b4d8;
-  border: 2px solid #00b4d8;
-}
-
-.btn.copy {
-  background-color: #222;
-  color: #00b4d8;
-  border: 2px solid #00b4d8;
-}
-
-.btn.share {
-  background-color: #222;
-  color: #00b4d8;
-  border: 2px dashed #00b4d8;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
 }
 
 .btn:active {
-  transform: scale(0.97);
-}
-
-/* معلومات الاتصال */
-.router-info {
-  background: #0f0f0f;
-  padding: 18px;
-  border-radius: 16px;
-  margin-bottom: 25px;
-  font-size: 15px;
-  line-height: 1.8;
-  color: #ccc;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
-}
-
-/* الرسم البياني */
-.router-chart {
-  margin-bottom: 30px;
-}
-
-.router-chart h2 {
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #00b4d8;
-}
-
-/* التذييل */
-.router-footer {
-  text-align: center;
-  font-size: 14px;
-  color: #888;
-  margin-top: 20px;
-  border-top: 1px solid #333;
-  padding-top: 14px;
-}
-
-/* استجابة الجوال */
-@media (max-width: 600px) {
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .router-box {
-    padding: 20px;
-  }
-
-  .router-header h1 {
-    font-size: 20px;
-  }
-
-  .screen-row {
-    font-size: 16px;
-  }
+  transform: scale(0.95);
 }
