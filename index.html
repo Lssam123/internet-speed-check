@@ -1,37 +1,79 @@
-const downloadEl = document.getElementById("download");
-const uploadFinalEl = document.getElementById("upload-final");
-const qualityEl = document.getElementById("quality");
-const currentTimeEl = document.getElementById("current-time");
-const timezoneEl = document.getElementById("timezone");
-const ledEl = document.getElementById("led");
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة الأسهم السعودية</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="stock-dashboard">
+    <header class="header">
+      <h1>متابعة الأسهم السعودية</h1>
+      <input type="text" id="symbolInput" placeholder="أدخل رمز السهم السعودي (مثلاً: TADAWUL:2222)" />
+      <button onclick="عرض_السهم()">عرض السهم</button>
+    </header>
 
-// تحديث الوقت والمنطقة الزمنية
-function تحديث_الوقت() {
-  const الآن = new Date();
-  currentTimeEl.textContent = الآن.toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" });
-  timezoneEl.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
-}
-تحديث_الوقت();
+    <section class="stock-list">
+      <h2>الطاقة</h2>
+      <ul>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:2222')">أرامكو السعودية</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:2082')">أكوا باور</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:2380')">بترو رابغ</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:2030')">المصافي</li>
+      </ul>
 
-// تحليل جودة الاتصال وتحديث اللمبة (مثال يدوي)
-function تحليل_جودة(تحميل, رفع, زمن) {
-  const متوسط = (تحميل + رفع) / 2;
-  const كفاءة = متوسط / زمن;
-  let الجودة = "ضعيف";
-  let اللون = "#e74c3c";
-  let ledClass = "bad";
+      <h2>البنوك</h2>
+      <ul>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:1120')">مصرف الراجحي</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:1010')">البنك الأول</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:1060')">بنك الرياض</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:1140')">البنك السعودي الفرنسي</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:1180')">بنك البلاد</li>
+      </ul>
 
-  if (كفاءة > 3) {
-    الجودة = "ممتاز";
-    اللون = "#2ecc71";
-    ledClass = "good";
-  } else if (كفاءة > 1.5) {
-    الجودة = "جيد";
-    اللون = "#f4a261";
-    ledClass = "good";
-  }
+      <h2>الاتصالات والتقنية</h2>
+      <ul>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:7010')">الاتصالات السعودية</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:7202')">جاهز الدولية</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:7203')">علم</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:7030')">زين السعودية</li>
+      </ul>
 
-  qualityEl.textContent = `جودة الاتصال: ${الجودة}`;
-  qualityEl.style.color = اللون;
-  ledEl.className = `status-led ${ledClass}`;
-}
+      <h2>الصناعة والأسمنت</h2>
+      <ul>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:2010')">سابك</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:1301')">أسمنت العربية</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:1320')">أسمنت القصيم</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:2040')">الخزف السعودي</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:2210')">نماء للكيماويات</li>
+      </ul>
+
+      <h2>التجزئة والنقل</h2>
+      <ul>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:4190')">جرير</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:4003')">إكسترا</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:4260')">بدجت السعودية</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:4040')">سابتكو</li>
+      </ul>
+
+      <h2>التأمين</h2>
+      <ul>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:8010')">التعاونية</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:8050')">سلامة للتأمين</li>
+        <li onclick="عرض_السهم_المباشر('TADAWUL:8120')">اتحاد الخليج الأهلية</li>
+      </ul>
+    </section>
+
+    <section class="stock-widget" id="widgetContainer">
+      <p>اختر سهمًا من القائمة أو أدخل رمزًا لعرض البيانات.</p>
+    </section>
+
+    <footer class="footer">
+      <p>© 2026 | عصام | بيانات السوق السعودي</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
