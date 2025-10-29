@@ -57,11 +57,19 @@ const speedChart = new Chart(ctx, {
 
 // قياس التحميل الحقيقي
 async function قياس_سرعة_التحميل() {
-  const رابط = "https://speed.hetzner.de/100MB.bin";
-  const حجم_ميجا = 100;
+  const رابط = "https://speed.hetzner.de/20MB.bin";
+  const حجم_ميجا = 20;
   const البداية = performance.now();
+
   try {
-    const response = await fetch(`${رابط}?nocache=${Math.random()}`, { cache: "no-store" });
+    const response = await fetch(`${رابط}?nocache=${Date.now()}`, {
+      method: "GET",
+      cache: "no-store",
+      mode: "cors"
+    });
+
+    if (!response.ok) throw new Error("فشل التحميل");
+
     await response.blob();
     const النهاية = performance.now();
     const الزمن = (النهاية - البداية) / 1000;
