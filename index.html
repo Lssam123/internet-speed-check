@@ -3,61 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>اختبار سرعة الإنترنت</title>
+  <title>راوتر قياس سرعة الإنترنت</title>
+  <meta name="description" content="واجهة تحاكي الراوتر لقياس سرعة الإنترنت الحقيقي بدقة" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="container">
-    <header class="header fade-in">
-      <h1>اختبار سرعة الإنترنت</h1>
-      <p class="subtitle">قياس فعلي للسرعة بدون مؤثرات وهمية</p>
+  <main class="router-box">
+    <!-- رأس الراوتر -->
+    <header class="router-header">
+      <h1>جهاز قياس سرعة الإنترنت</h1>
+      <div class="status-led" id="led" title="حالة الاتصال"></div>
     </header>
 
-    <section class="actions fade-in">
-      <div class="button-group">
-        <button class="btn primary" onclick="ابدأ_الاختبار()">بدء الاختبار</button>
-        <button class="btn secondary" onclick="إعادة_الاختبار()">إعادة الاختبار</button>
-      </div>
-    </section>
-
-    <section class="results fade-in">
-      <div class="result-box">
-        <span class="label">سرعة التحميل:</span>
+    <!-- شاشة النتائج -->
+    <section class="router-screen">
+      <div class="screen-row">
+        <span>التحميل:</span>
         <span id="download">--</span>
-        <span class="unit">ميجابت/ثانية</span>
+        <span class="unit">Mbps</span>
       </div>
-      <div class="result-box">
-        <span class="label">سرعة الرفع:</span>
+      <div class="screen-row">
+        <span>الرفع:</span>
         <span id="upload-final">--</span>
-        <span class="unit">ميجابت/ثانية</span>
+        <span class="unit">Mbps</span>
       </div>
-      <div class="quality-box">
-        <span id="quality">جودة الاتصال: --</span>
+      <div class="screen-row">
+        <span>الجودة:</span>
+        <span id="quality">--</span>
       </div>
     </section>
 
-    <section class="connection-info fade-in">
+    <!-- أزرار التحكم -->
+    <section class="router-buttons">
+      <button class="btn primary" onclick="ابدأ_الاختبار()">بدء الاختبار</button>
+      <button class="btn secondary" onclick="إعادة_الاختبار()">إعادة</button>
+    </section>
+
+    <!-- معلومات الاتصال -->
+    <section class="router-info">
       <p>نوع الاتصال: <span id="connection-type">--</span></p>
       <p>الوقت الحالي: <span id="current-time">--:--</span></p>
       <p>المنطقة الزمنية: <span id="timezone">--</span></p>
       <p>مزود الخدمة: <span id="isp">--</span></p>
-      <p>التاريخ: <span id="year">2026</span></p>
+      <p>السنة: <span id="year">--</span></p>
     </section>
 
-    <section class="chart-section fade-in">
+    <!-- الرسم البياني -->
+    <section class="router-chart">
       <h2>تطور السرعة أثناء الاختبار</h2>
-      <canvas id="speedChart" width="100%" height="300"></canvas>
+      <canvas id="speedChart" width="100%" height="250"></canvas>
     </section>
 
-    <section class="actions fade-in">
-      <div class="button-group">
-        <button class="btn copy" onclick="نسخ_النتيجة()">نسخ النتيجة</button>
-        <button class="btn share" onclick="مشاركة_النتيجة()">مشاركة النتيجة</button>
-      </div>
+    <!-- نسخ ومشاركة -->
+    <section class="router-buttons">
+      <button class="btn copy" onclick="نسخ_النتيجة()">نسخ النتيجة</button>
+      <button class="btn share" onclick="مشاركة_النتيجة()">مشاركة النتيجة</button>
     </section>
 
-    <footer class="footer fade-in">
-      <p>متدربين كلية العيدابي © 2026</p>
+    <!-- التذييل -->
+    <footer class="router-footer">
+      <p>© 2026 | تصميم يحاكي الراوتر | عصام</p>
     </footer>
   </main>
 
