@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>راوتر قياس سرعة الإنترنت</title>
-  <meta name="description" content="واجهة تحاكي الراوتر لقياس سرعة الإنترنت الحقيقي بدقة" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -33,40 +32,24 @@
       </div>
     </section>
 
-    <!-- أزرار التحكم -->
-    <section class="router-buttons">
-      <button class="btn primary" onclick="ابدأ_الاختبار()">بدء الاختبار</button>
-      <button class="btn secondary" onclick="إعادة_الاختبار()">إعادة</button>
-    </section>
-
-    <!-- معلومات الاتصال -->
+    <!-- معلومات الوقت فقط -->
     <section class="router-info">
-      <p>نوع الاتصال: <span id="connection-type">--</span></p>
       <p>الوقت الحالي: <span id="current-time">--:--</span></p>
       <p>المنطقة الزمنية: <span id="timezone">--</span></p>
-      <p>مزود الخدمة: <span id="isp">--</span></p>
-      <p>السنة: <span id="year">--</span></p>
     </section>
 
-    <!-- الرسم البياني -->
+    <!-- اختبار السرعة الحقيقي -->
     <section class="router-chart">
-      <h2>تطور السرعة أثناء الاختبار</h2>
-      <canvas id="speedChart" width="100%" height="250"></canvas>
-    </section>
-
-    <!-- نسخ ومشاركة -->
-    <section class="router-buttons">
-      <button class="btn copy" onclick="نسخ_النتيجة()">نسخ النتيجة</button>
-      <button class="btn share" onclick="مشاركة_النتيجة()">مشاركة النتيجة</button>
+      <h2>اختبار السرعة الحقيقي</h2>
+      <iframe src="https://openspeedtest.com/speedtest" width="100%" height="400" frameborder="0" style="border-radius: 12px; overflow: hidden;"></iframe>
     </section>
 
     <!-- التذييل -->
     <footer class="router-footer">
-      <p>© 2026 | تصميم يحاكي الراوتر | عصام</p>
+      <p>© تصميم يحاكي الراوتر | عصام</p>
     </footer>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
