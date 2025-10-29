@@ -13,8 +13,8 @@ function تحديث_الوقت() {
 }
 تحديث_الوقت();
 
-// تحليل جودة الاتصال وتحديث اللمبة
-function تحليل_الجودة(تحميل, رفع, زمن) {
+// تحليل جودة الاتصال وتحديث اللمبة (مثال يدوي)
+function تحليل_جودة(تحميل, رفع, زمن) {
   const متوسط = (تحميل + رفع) / 2;
   const كفاءة = متوسط / زمن;
   let الجودة = "ضعيف";
@@ -34,13 +34,4 @@ function تحليل_الجودة(تحميل, رفع, زمن) {
   qualityEl.textContent = `جودة الاتصال: ${الجودة}`;
   qualityEl.style.color = اللون;
   ledEl.className = `status-led ${ledClass}`;
-}
-
-// إعادة تعيين النتائج واللمبة
-function إعادة_الاختبار() {
-  downloadEl.textContent = "--";
-  uploadFinalEl.textContent = "--";
-  qualityEl.textContent = "جودة الاتصال: --";
-  qualityEl.style.color = "#ccc";
-  ledEl.className = "status-led";
 }
