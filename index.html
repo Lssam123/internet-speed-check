@@ -2,65 +2,48 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>فحص الجهاز والمتصفح والشبكة — نسخة 2.0</title>
+    <title>اختبار الشبكة — نسخة 3.0</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>فحص الجهاز والمتصفح والشبكة — نسخة 2.0</header>
+<header>اختبار الشبكة — Network Test 3.0</header>
 
 <div class="container">
 
-    <!-- معلومات الجهاز -->
-    <div class="box">
-        <h2>معلومات الجهاز</h2>
-        <div class="result" id="device"></div>
-        <div class="result" id="screen"></div>
-        <div class="result" id="battery"></div>
+    <!-- IP -->
+    <div class="card">
+        <h3>عنوان الـ IP</h3>
+        <button onclick="getIP()">عرض الـ IP</button>
+        <p id="ip" class="output"></p>
     </div>
 
-    <!-- معلومات المتصفح -->
-    <div class="box">
-        <h2>معلومات المتصفح</h2>
-        <div class="result" id="browser"></div>
-        <div class="result" id="language"></div>
-        <div class="result" id="webgl"></div>
-    </div>
-
-    <!-- معلومات الشبكة -->
-    <div class="box">
-        <h2>معلومات الشبكة</h2>
-        <div class="result" id="ip"></div>
-        <div class="result" id="connection"></div>
-        <div class="result" id="downlink"></div>
-    </div>
-
-    <!-- اختبار سرعة التحميل -->
-    <div class="box">
-        <h2>اختبار سرعة التحميل (دقة عالية)</h2>
+    <!-- Download -->
+    <div class="card">
+        <h3>اختبار سرعة التحميل</h3>
         <button onclick="testDownloadSpeed()">ابدأ الاختبار</button>
-        <div class="result" id="speed"></div>
+        <p id="download" class="output"></p>
     </div>
 
-    <!-- اختبار سرعة الرفع -->
-    <div class="box">
-        <h2>اختبار سرعة الرفع</h2>
+    <!-- Upload -->
+    <div class="card">
+        <h3>اختبار سرعة الرفع</h3>
         <button onclick="testUploadSpeed()">ابدأ الاختبار</button>
-        <div class="result" id="upload"></div>
+        <p id="upload" class="output"></p>
     </div>
 
-    <!-- اختبار Ping -->
-    <div class="box">
-        <h2>اختبار Ping المتقدم</h2>
-        <button onclick="testPingAdvanced()">ابدأ الاختبار</button>
-        <div class="result" id="ping"></div>
+    <!-- Ping -->
+    <div class="card">
+        <h3>اختبار Ping</h3>
+        <button onclick="testPing()">ابدأ الاختبار</button>
+        <p id="ping" class="output"></p>
     </div>
 
-    <!-- اختبار Jitter -->
-    <div class="box">
-        <h2>اختبار Jitter المتقدم</h2>
-        <button onclick="testJitterAdvanced()">ابدأ الاختبار</button>
-        <div class="result" id="jitter"></div>
+    <!-- Jitter -->
+    <div class="card">
+        <h3>اختبار Jitter</h3>
+        <button onclick="testJitter()">ابدأ الاختبار</button>
+        <p id="jitter" class="output"></p>
     </div>
 
 </div>
