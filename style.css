@@ -1,59 +1,76 @@
+/* إعدادات عامة */
 body {
     font-family: "Tahoma", sans-serif;
     direction: rtl;
-    background: #eef2f5;
+    background: #f2f4f7;
     margin: 0;
     padding: 0;
 }
 
+/* الهيدر */
 header {
-    background: #0078ff;
+    background: #0059d6;
     color: white;
-    padding: 20px;
+    padding: 25px;
     text-align: center;
     font-size: 26px;
     font-weight: bold;
+    box-shadow: 0 2px 10px #0003;
 }
 
+/* الحاوية */
 .container {
     width: 90%;
+    max-width: 900px;
     margin: auto;
     padding: 20px 0;
 }
 
-.box {
+/* الكروت */
+.card {
     background: white;
     padding: 20px;
     margin-bottom: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px #ccc;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px #0002;
+    transition: 0.2s;
 }
 
-h2 {
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px #0003;
+}
+
+/* العناوين */
+.card h3 {
     margin-top: 0;
-    color: #0078ff;
+    color: #0059d6;
+    font-size: 20px;
 }
 
+/* الأزرار */
 button {
-    padding: 10px 20px;
-    background: #0078ff;
+    padding: 12px 25px;
+    background: #0059d6;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    margin-top: 10px;
     font-size: 15px;
+    transition: 0.2s;
 }
 
 button:hover {
-    background: #005fcc;
+    background: #003f9e;
 }
 
-.result {
-    background: #f0f7ff;
-    padding: 10px;
-    border-radius: 6px;
-    margin-top: 10px;
-    border-right: 4px solid #0078ff;
+/* النتائج */
+.output {
+    background: #eef4ff;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+    border-right: 5px solid #0059d6;
     font-size: 15px;
+    min-height: 20px;
 }
