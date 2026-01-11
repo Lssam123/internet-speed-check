@@ -1,4 +1,3 @@
-/* إعدادات عامة */
 body {
     margin: 0;
     padding: 0;
@@ -11,20 +10,17 @@ body {
     height: 100vh;
 }
 
-/* الحاوية */
 .container {
     text-align: center;
     color: white;
 }
 
-/* عنوان */
 .title {
     font-size: 26px;
     margin-bottom: 25px;
     color: #e6e6e6;
 }
 
-/* عداد السرعة */
 .speedometer {
     position: relative;
     width: 320px;
@@ -36,28 +32,14 @@ body {
     box-shadow: 0 0 25px #000, inset 0 0 20px #000;
 }
 
-/* الأرقام */
 .dial {
     position: absolute;
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background:
-        conic-gradient(
-            from -90deg,
-            #ffffff 0deg,
-            #ffffff 30deg,
-            #cccccc 60deg,
-            #999999 120deg,
-            #666666 180deg,
-            #333333 240deg,
-            #ffffff 300deg,
-            #ffffff 360deg
-        );
     opacity: 0.08;
 }
 
-/* المؤشر */
 .needle {
     position: absolute;
     width: 6px;
@@ -71,7 +53,6 @@ body {
     box-shadow: 0 0 10px red;
 }
 
-/* الغطاء الأوسط */
 .center-cap {
     position: absolute;
     width: 40px;
@@ -83,7 +64,6 @@ body {
     box-shadow: inset 0 0 10px #000;
 }
 
-/* رقم السرعة */
 .speed-display {
     position: absolute;
     width: 100%;
@@ -95,21 +75,21 @@ body {
     text-shadow: 0 0 10px #000;
 }
 
-/* زر البدء */
-.start-btn {
+/* زر إعادة الاختبار */
+.restart-btn {
     margin-top: 35px;
-    padding: 14px 40px;
-    font-size: 18px;
+    padding: 12px 20px;
+    font-size: 26px;
     background: #444;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 50%;
     cursor: pointer;
     transition: 0.3s;
     box-shadow: 0 0 10px #000;
 }
 
-.start-btn:hover {
+.restart-btn:hover {
     background: #666;
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
