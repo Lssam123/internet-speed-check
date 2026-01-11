@@ -2,27 +2,33 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Speedometer Test</title>
+    <title>فحص المتاجر الإلكترونية</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
 
-        <h1 class="title">اختبار سرعة التحميل والرفع</h1>
+        <h1 class="title">فحص المتجر الإلكتروني (Fake Store Detector)</h1>
+        <p class="subtitle">أدخل رابط المتجر وسيتم تحليل مدى موثوقيته</p>
 
-        <!-- عداد السرعة -->
-        <div class="speedometer">
-            <div class="dial"></div>
-            <div class="needle" id="needle"></div>
-            <div class="center-cap"></div>
-            <div class="speed-display" id="speedValue">0 Mbps</div>
+        <div class="input-box">
+            <input type="text" id="urlInput" placeholder="مثال: https://www.example-store.com">
+            <button onclick="analyzeStore()">فحص</button>
         </div>
 
-        <!-- زر إعادة الاختبار (أيقونة احترافية) -->
-        <button class="restart-btn" onclick="restartTest()">
-            🔁
-        </button>
+        <div class="result-box" id="resultBox" style="display: none;">
+            <h2>نتيجة الفحص</h2>
+            <div class="score" id="scoreValue">-- / 100</div>
+            <div class="level" id="trustLevel"></div>
+            <ul class="details" id="detailsList">
+                <!-- يتم تعبئتها عبر JavaScript -->
+            </ul>
+        </div>
+
+        <div class="note">
+            هذا الفحص مبدئي ويعتمد على تحليل تقني للرابط وعمر الدومين وبعض المؤشرات العامة.
+        </div>
 
     </div>
 
