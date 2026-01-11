@@ -1,11 +1,11 @@
-// تحريك المؤشر بسلاسة
+// تحريك المؤشر
 function animateNeedle(targetSpeed) {
     const needle = document.getElementById("needle");
     const speedValue = document.getElementById("speedValue");
 
     let current = 0;
-    const maxAngle = 180; // نصف دائرة
-    const maxSpeed = 100; // الحد الأعلى للسرعة
+    const maxAngle = 180;
+    const maxSpeed = 100;
 
     const interval = setInterval(() => {
         if (current >= targetSpeed) {
@@ -14,7 +14,6 @@ function animateNeedle(targetSpeed) {
             current += 1;
         }
 
-        // تحويل السرعة إلى زاوية
         let angle = (current / maxSpeed) * maxAngle - 90;
 
         needle.style.transform = `rotate(${angle}deg)`;
@@ -24,24 +23,61 @@ function animateNeedle(targetSpeed) {
 }
 
 // اختبار سرعة التحميل
-async function startDownloadTest() {
-    const testFile = "https://speed.hetzner.de/1MB.bin"; // ملف صغير للاختبار
-    const startTime = performance.now();
+async function testDownload() {
+    const file = "https://speed.hetzner.de/1MB.bin";
+    const start = performance.now();
 
-    try {
-        await fetch(testFile);
-        const endTime = performance.now();
+    await fetch(file);
+    const end = performance.now();
 
-        const duration = (endTime - startTime) / 1000; // بالثواني
-        const fileSize = 1 * 1024 * 1024 * 8; // 1MB بالبت
+    const duration = (end - start) / 1000;
+    const size = 1 * 1024 * 1024 * 8;
 
-        const speedMbps = fileSize / (duration * 1024 * 1024);
-
-        const finalSpeed = Math.min(Math.round(speedMbps), 100);
-
-        animateNeedle(finalSpeed);
-
-    } catch (error) {
-        alert("حدث خطأ أثناء الاختبار");
-    }
+    const speed = size / (duration * 1024 * 1024);
+    return Math.min(Math.round(speed), 100);
 }
+
+// اختبار سرعة الرفع
+async function testUpload() {
+    const data = new Uint8Array(1 * 1024 * 1024); // 1MB
+    const start = performance.now();
+
+    await fetch("https://httpbin.org/post", {
+        method: "POST",
+        body: data
+    });
+
+    const end = performance.now();
+    const duration = (end - start) / 1000;
+
+    const speed = (data.length * 8) / (duration * 1024 * 1024);
+    return Math.min(Math.round(speed), 100);
+}
+
+// تشغيل الاختبار الكامل
+async function startFullTest() {
+    // 1) اختبار التحميل
+    const downloadSpeed = await testDownload();
+    animateNeedle(downloadSpeed);
+
+    // 2) انتظار انتهاء حركة المؤشر
+    setTimeout(async () => {
+        const uploadSpeed = await testUpload();
+        animateNeedle(uploadSpeed);
+    }, 2500);
+}
+
+// إعادة الاختبار
+function restartTest() {
+    document.getElementById("needle").style.transform = "rotate(-90deg)";
+    document.getElementById("speedValue").textContent = "0 Mbps";
+
+    setTimeout(() => {
+        startFullTest();
+    }, 500);
+}
+
+// يبدأ تلقائيًا عند تحميل الصفحة
+window.onload = () => {
+    startFullTest();
+};
