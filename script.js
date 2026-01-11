@@ -1,5 +1,5 @@
 // حط مفتاح الـ API الخاص فيك هنا فقط على جهازك
-const API_KEY = "YOUR_API_KEY_HERE"; // ← استبدله بمفتاحك
+const API_KEY = "752490cbad0d484688a0f70c8bea6c79"; // ← استبدله بمفتاحك
 
 // تحليل الرابط واستخراج الدومين
 function getDomainFromUrl(url) {
@@ -58,7 +58,7 @@ function getDomainAgeYears(createdDateStr) {
 async function fetchDomainInfo(domain) {
     // مثال على whoisfreaks:
     // تأكد من أن هذا الـ endpoint متوافق مع حسابك وخطتك
-    const url = `https://api.whoisfreaks.com/v1.0/whois?apiKey=${API_KEY}&domainName=${domain}&whoisRecordType=all`;
+    const url = `https://api.whoisfreaks.com/v1.0/whois?apiKey=${752490cbad0d484688a0f70c8bea6c79}&domainName=${domain}&whoisRecordType=all`;
 
     const res = await fetch(url);
     if (!res.ok) throw new Error("خطأ في الاتصال بـ WHOIS API");
