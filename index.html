@@ -2,61 +2,28 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Network Test 5.0</title>
+    <title>Speedometer Test</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- رأس الصفحة -->
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="شعار الكلية التقنية">
-        </div>
-        <div class="title">
-            <h1>اختبار الشبكة — Network Test 5.0</h1>
-            <p class="subtitle">قياس سرعة التحميل والرفع و Ping و Jitter بضغطة زر واحدة</p>
-        </div>
-    </header>
-
-    <!-- الحاوية الرئيسية -->
     <div class="container">
 
-        <!-- زر تشغيل جميع الاختبارات -->
-        <button class="main-btn" onclick="runAllTests()">ابدأ جميع الاختبارات</button>
+        <h1 class="title">اختبار سرعة التحميل</h1>
 
-        <!-- النتائج -->
-        <div class="results">
-
-            <div class="card">
-                <h3>عنوان الـ IP</h3>
-                <p id="ip" class="output">—</p>
-            </div>
-
-            <div class="card">
-                <h3>سرعة التحميل</h3>
-                <p id="download" class="output">—</p>
-            </div>
-
-            <div class="card">
-                <h3>سرعة الرفع</h3>
-                <p id="upload" class="output">—</p>
-            </div>
-
-            <div class="card">
-                <h3>Ping</h3>
-                <p id="ping" class="output">—</p>
-            </div>
-
-            <div class="card">
-                <h3>Jitter</h3>
-                <p id="jitter" class="output">—</p>
-            </div>
-
+        <!-- عداد السرعة -->
+        <div class="speedometer">
+            <div class="dial"></div>
+            <div class="needle" id="needle"></div>
+            <div class="center-cap"></div>
+            <div class="speed-display" id="speedValue">0 Mbps</div>
         </div>
+
+        <!-- زر البدء -->
+        <button class="start-btn" onclick="startDownloadTest()">ابدأ الاختبار</button>
 
     </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>
