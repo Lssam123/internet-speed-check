@@ -1,117 +1,115 @@
 /* إعدادات عامة */
 body {
-    font-family: "Tahoma", sans-serif;
-    direction: rtl;
-    background: #ffffff;
     margin: 0;
     padding: 0;
-}
-
-/* رأس الصفحة */
-header {
+    background: #1a1a1a;
+    font-family: "Tahoma", sans-serif;
+    direction: rtl;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 25px 40px;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 4px 12px #0001;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    height: 100vh;
 }
 
-.logo img {
-    height: 60px;
-    width: auto;
-}
-
-.title h1 {
-    margin: 0;
-    font-size: 26px;
-    color: #333;
-}
-
-.subtitle {
-    font-size: 15px;
-    color: #666;
-    margin-top: 6px;
-}
-
-/* الحاوية الرئيسية */
+/* الحاوية */
 .container {
-    width: 90%;
-    max-width: 900px;
-    margin: auto;
-    padding: 30px 0;
+    text-align: center;
+    color: white;
 }
 
-/* زر تشغيل جميع الاختبارات */
-.main-btn {
+/* عنوان */
+.title {
+    font-size: 26px;
+    margin-bottom: 25px;
+    color: #e6e6e6;
+}
+
+/* عداد السرعة */
+.speedometer {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    margin: auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2b2b2b 40%, #1a1a1a 100%);
+    border: 12px solid #c0c0c0;
+    box-shadow: 0 0 25px #000, inset 0 0 20px #000;
+}
+
+/* الأرقام */
+.dial {
+    position: absolute;
     width: 100%;
-    padding: 15px;
-    background: rgba(0, 89, 214, 0.8);
+    height: 100%;
+    border-radius: 50%;
+    background:
+        conic-gradient(
+            from -90deg,
+            #ffffff 0deg,
+            #ffffff 30deg,
+            #cccccc 60deg,
+            #999999 120deg,
+            #666666 180deg,
+            #333333 240deg,
+            #ffffff 300deg,
+            #ffffff 360deg
+        );
+    opacity: 0.08;
+}
+
+/* المؤشر */
+.needle {
+    position: absolute;
+    width: 6px;
+    height: 130px;
+    background: red;
+    top: 30px;
+    left: 50%;
+    transform-origin: bottom center;
+    transform: rotate(-90deg);
+    border-radius: 3px;
+    box-shadow: 0 0 10px red;
+}
+
+/* الغطاء الأوسط */
+.center-cap {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #c0c0c0;
+    border-radius: 50%;
+    top: 140px;
+    left: 140px;
+    box-shadow: inset 0 0 10px #000;
+}
+
+/* رقم السرعة */
+.speed-display {
+    position: absolute;
+    width: 100%;
+    bottom: 40px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 10px #000;
+}
+
+/* زر البدء */
+.start-btn {
+    margin-top: 35px;
+    padding: 14px 40px;
+    font-size: 18px;
+    background: #444;
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    cursor: pointer;
-    margin-bottom: 30px;
-    transition: 0.3s;
-    box-shadow: 0 6px 16px #0002;
-    backdrop-filter: blur(6px);
-}
-
-.main-btn:hover {
-    background: rgba(0, 89, 214, 1);
-    transform: translateY(-2px);
-}
-
-/* النتائج */
-.results {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 25px;
-}
-
-/* البطاقات الزجاجية */
-.card {
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px #0001;
-    transition: 0.3s;
-    border: 1px solid #ddd;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px #0002;
-}
-
-.card h3 {
-    margin-top: 0;
-    color: #0059d6;
-    font-size: 20px;
-}
-
-/* النتائج */
-.output {
-    background: rgba(240, 245, 255, 0.6);
-    padding: 12px;
     border-radius: 10px;
-    margin-top: 12px;
-    border-right: 5px solid #0059d6;
-    font-size: 16px;
-    min-height: 24px;
-    display: flex;
-    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #000;
 }
 
-/* استجابة للشاشات الكبيرة */
-@media (min-width: 700px) {
-    .results {
-        grid-template-columns: 1fr 1fr;
-    }
+.start-btn:hover {
+    background: #666;
+    transform: scale(1.05);
 }
