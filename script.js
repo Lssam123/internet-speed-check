@@ -19,7 +19,7 @@ function animateNeedle(targetSpeed) {
         needle.style.transform = `rotate(${angle}deg)`;
         speedValue.textContent = current + " Mbps";
 
-    }, 20);
+    }, 15);
 }
 
 // اختبار سرعة التحميل
@@ -39,7 +39,7 @@ async function testDownload() {
 
 // اختبار سرعة الرفع
 async function testUpload() {
-    const data = new Uint8Array(1 * 1024 * 1024); // 1MB
+    const data = new Uint8Array(1 * 1024 * 1024);
     const start = performance.now();
 
     await fetch("https://httpbin.org/post", {
@@ -56,15 +56,13 @@ async function testUpload() {
 
 // تشغيل الاختبار الكامل
 async function startFullTest() {
-    // 1) اختبار التحميل
     const downloadSpeed = await testDownload();
     animateNeedle(downloadSpeed);
 
-    // 2) انتظار انتهاء حركة المؤشر
     setTimeout(async () => {
         const uploadSpeed = await testUpload();
         animateNeedle(uploadSpeed);
-    }, 2500);
+    }, 3000);
 }
 
 // إعادة الاختبار
