@@ -9,25 +9,25 @@
 
     <div class="container">
 
-        <h1 class="title">فحص المتجر الإلكتروني (Fake Store Detector)</h1>
-        <p class="subtitle">أدخل رابط المتجر وسيتم تحليل مدى موثوقيته</p>
+        <h1 class="title">فحص المتجر الإلكتروني</h1>
 
         <div class="input-box">
-            <input type="text" id="urlInput" placeholder="مثال: https://www.example-store.com">
-            <button onclick="analyzeStore()">فحص</button>
+            <input type="text" id="urlInput" placeholder="مثال: https://store.com">
+            <button id="scanBtn" onclick="startScan()">فحص</button>
         </div>
 
-        <div class="result-box" id="resultBox" style="display: none;">
+        <!-- شاشة التحميل -->
+        <div id="loadingBox" class="loading-box">
+            <div class="loader"></div>
+            <p class="loading-text">جاري الفحص...</p>
+        </div>
+
+        <!-- النتيجة -->
+        <div class="result-box" id="resultBox">
             <h2>نتيجة الفحص</h2>
             <div class="score" id="scoreValue">-- / 100</div>
             <div class="level" id="trustLevel"></div>
-            <ul class="details" id="detailsList">
-                <!-- يتم تعبئتها عبر JavaScript -->
-            </ul>
-        </div>
-
-        <div class="note">
-            هذا الفحص مبدئي ويعتمد على تحليل تقني للرابط وعمر الدومين وبعض المؤشرات العامة.
+            <ul class="details" id="detailsList"></ul>
         </div>
 
     </div>
