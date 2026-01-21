@@ -12,7 +12,6 @@ const riskyTlds = [
     ".xyz", ".top", ".buzz", ".click", ".shop", ".club", ".info", ".store"
 ];
 
-// بدء الفحص مع المؤثرات
 function startScan() {
     const url = document.getElementById("urlInput").value.trim();
     const scanBtn = document.getElementById("scanBtn");
@@ -24,16 +23,10 @@ function startScan() {
         return;
     }
 
-    // إخفاء النتيجة القديمة
     resultBox.style.display = "none";
-
-    // تعطيل الزر
     scanBtn.disabled = true;
-
-    // إظهار شاشة التحميل
     loadingBox.style.display = "block";
 
-    // تشغيل التحليل الحقيقي
     runAnalysis(url)
         .then(result => {
             showResult(result);
@@ -48,12 +41,9 @@ function startScan() {
         });
 }
 
-// تحليل الرابط بالكامل
 async function runAnalysis(url) {
     const domain = getDomainFromUrl(url);
-    if (!domain) {
-        throw new Error("رابط غير صالح");
-    }
+    if (!domain) throw new Error("رابط غير صالح");
 
     let totalScore = 0;
     let details = [];
@@ -85,12 +75,13 @@ async function runAnalysis(url) {
         details.push("⚠ امتداد الدومين من الأنواع كثيرة الاستخدام في الاحتيال.");
     }
 
-    // 4) عمر الدومين من WHOIS API
+    // 4) WHOIS + DNS + عمر الدومين
     let ageYears = 0;
+    let dnsSummary = "--";
+    let dnsNote = "";
     try {
         const whois = await fetchDomainInfo(domain);
 
-        // حاول التقاط تاريخ الإنشاء من أكثر من مكان محتمل
         let createdDate =
             whois.createdDate ||
             (whois.whoisRecord && whois.whoisRecord.createdDate) ||
@@ -111,33 +102,114 @@ async function runAnalysis(url) {
         } else {
             details.push("⚠ لم يتمكن النظام من تحديد عمر الدومين بدقة.");
         }
+
+        // DNS (Nameservers)
+        let nameservers =
+            whois.nameServers ||
+            (whois.whoisRecord && whois.whoisRecord.nameServers) ||
+            (whois.domain && whois.domain.nameServers) ||
+            null;
+
+        if (Array.isArray(nameservers) && nameservers.length > 0) {
+            dnsSummary = nameservers.slice(0, 2).join(", ");
+            dnsNote = "تم العثور على خوادم DNS.";
+            details.push(`ℹ خوادم DNS: ${nameservers.join(", ")}`);
+        } else if (nameservers && typeof nameservers === "string") {
+            dnsSummary = nameservers;
+            dnsNote = "تم العثور على خوادم DNS.";
+            details.push(`ℹ خوادم DNS: ${nameservers}`);
+        } else {
+            dnsSummary = "غير متوفر";
+            dnsNote = "لم يتم العثور على معلومات DNS واضحة.";
+            details.push("⚠ لم يتم العثور على معلومات DNS واضحة.");
+        }
+
     } catch (e) {
         console.error(e);
-        details.push("⚠ تعذر جلب بيانات WHOIS. تم الاعتماد على التحليل المحلي فقط.");
+        details.push("⚠ تعذر جلب بيانات WHOIS/DNS. تم الاعتماد على التحليل المحلي فقط.");
+        dnsSummary = "غير متوفر";
+        dnsNote = "تعذر جلب بيانات DNS.";
     }
 
-    // 5) طول الدومين
-    if (domain.length <= 20) {
-        totalScore += 10;
-        details.push("✅ طول الدومين معقول وبسيط.");
-    } else {
-        details.push("⚠ الدومين طويل نسبيًا، وهذا أحيانًا يستخدم في الاحتيال.");
+    // 5) سرعة الموقع (زمن الاستجابة)
+    let speedMs = null;
+    let speedLabel = "--";
+    let speedNote = "";
+    try {
+        const start = performance.now();
+        // طلب بسيط لقياس الزمن (قد يتأثر بـ CORS لكن الزمن يُقاس)
+        await fetch(url, { method: "GET", mode: "no-cors" });
+        const end = performance.now();
+        speedMs = end - start;
+
+        if (speedMs <= 800) {
+            totalScore += 10;
+            speedLabel = `${Math.round(speedMs)} ms`;
+            speedNote = "استجابة سريعة نسبيًا.";
+            details.push(`✅ زمن استجابة الموقع تقريبًا ${Math.round(speedMs)} مللي ثانية (سريع).`);
+        } else if (speedMs <= 2000) {
+            totalScore += 5;
+            speedLabel = `${Math.round(speedMs)} ms`;
+            speedNote = "استجابة متوسطة.";
+            details.push(`⚠ زمن استجابة الموقع تقريبًا ${Math.round(speedMs)} مللي ثانية (متوسط).`);
+        } else {
+            speedLabel = `${Math.round(speedMs)} ms`;
+            speedNote = "استجابة بطيئة.";
+            details.push(`⚠ زمن استجابة الموقع تقريبًا ${Math.round(speedMs)} مللي ثانية (بطيء).`);
+        }
+    } catch (e) {
+        console.error(e);
+        speedLabel = "غير متوفر";
+        speedNote = "تعذر قياس سرعة الموقع (قد يكون محمي أو يمنع الطلبات المباشرة).";
+        details.push("⚠ تعذر قياس سرعة الموقع.");
     }
 
-    // 6) عدد الأرقام في الدومين
-    const digitsCount = (domain.match(/[0-9]/g) || []).length;
-    if (digitsCount <= 3) {
-        totalScore += 10;
-        details.push("✅ الدومين لا يحتوي أرقامًا كثيرة.");
+    // 6) الروابط الداخلية (محاولة مبسطة)
+    let linksCount = null;
+    let linksLabel = "--";
+    let linksNote = "";
+    try {
+        // ملاحظة: CORS قد يمنع قراءة المحتوى، لذلك نستخدم محاولة بسيطة
+        const resp = await fetch(url, { method: "GET" });
+        const text = await resp.text();
+        const matches = text.match(/<a\s+[^>]*href=/gi) || [];
+        linksCount = matches.length;
+
+        linksLabel = `${linksCount} رابط`;
+        if (linksCount > 200) {
+            linksNote = "عدد كبير من الروابط، قد يكون الموقع مزدحمًا أو معقدًا.";
+            details.push(`⚠ يحتوي الموقع على عدد كبير من الروابط الداخلية (${linksCount}).`);
+        } else if (linksCount > 20) {
+            linksNote = "عدد روابط داخلي طبيعي.";
+            details.push(`✅ يحتوي الموقع على عدد مناسب من الروابط الداخلية (${linksCount}).`);
+        } else {
+            linksNote = "عدد الروابط قليل نسبيًا.";
+            details.push(`⚠ يحتوي الموقع على عدد قليل من الروابط الداخلية (${linksCount}).`);
+        }
+    } catch (e) {
+        console.error(e);
+        linksLabel = "غير متوفر";
+        linksNote = "تعذر قراءة محتوى الصفحة (قيود CORS).";
+        details.push("⚠ تعذر فحص الروابط الداخلية بسبب قيود المتصفح (CORS).");
+    }
+
+    // 7) شهادة SSL (مبسطة)
+    let sslLabel = "--";
+    let sslNote = "";
+    if (httpsUsed) {
+        sslLabel = "موجودة";
+        sslNote = "الموقع يستخدم HTTPS، مما يعني وجود شهادة SSL.";
+        details.push("✅ الموقع يستخدم شهادة SSL (بشكل عام).");
     } else {
-        details.push("⚠ الدومين يحتوي أرقامًا كثيرة، وهذا أحيانًا علامة على محاولة تقليد.");
+        sslLabel = "غير موجودة";
+        sslNote = "لا يوجد HTTPS، مما يعني عدم وجود شهادة SSL فعّالة.";
+        details.push("⚠ لا توجد شهادة SSL فعّالة (لا يوجد HTTPS).");
     }
 
     // ضبط الدرجة بين 0 و 100
     if (totalScore < 0) totalScore = 0;
     if (totalScore > 100) totalScore = 100;
 
-    // مستوى الثقة
     let levelText = "";
     let levelColor = "";
 
@@ -157,20 +229,48 @@ async function runAnalysis(url) {
         score: totalScore,
         levelText,
         levelColor,
-        details
+        details,
+        dnsSummary,
+        dnsNote,
+        speedLabel,
+        speedNote,
+        linksLabel,
+        linksNote,
+        sslLabel,
+        sslNote
     };
 }
 
-// عرض النتيجة في الواجهة
 function showResult(result) {
     const resultBox = document.getElementById("resultBox");
     const scoreEl = document.getElementById("scoreValue");
     const trustEl = document.getElementById("trustLevel");
     const detailsList = document.getElementById("detailsList");
 
+    const dnsCard = document.getElementById("dnsCard");
+    const dnsNote = document.getElementById("dnsNote");
+    const linksCard = document.getElementById("linksCard");
+    const linksNote = document.getElementById("linksNote");
+    const speedCard = document.getElementById("speedCard");
+    const speedNote = document.getElementById("speedNote");
+    const sslCard = document.getElementById("sslCard");
+    const sslNote = document.getElementById("sslNote");
+
     scoreEl.textContent = `${result.score} / 100`;
     trustEl.textContent = result.levelText;
     trustEl.style.color = result.levelColor;
+
+    dnsCard.textContent = result.dnsSummary;
+    dnsNote.textContent = result.dnsNote;
+
+    linksCard.textContent = result.linksLabel;
+    linksNote.textContent = result.linksNote;
+
+    speedCard.textContent = result.speedLabel;
+    speedNote.textContent = result.speedNote;
+
+    sslCard.textContent = result.sslLabel;
+    sslNote.textContent = result.sslNote;
 
     detailsList.innerHTML = "";
     result.details.forEach(d => {
@@ -184,7 +284,6 @@ function showResult(result) {
 
 // ====== دوال مساعدة ======
 
-// استخراج الدومين من الرابط
 function getDomainFromUrl(url) {
     try {
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -197,44 +296,33 @@ function getDomainFromUrl(url) {
     }
 }
 
-// فحص HTTPS
 function isHttps(url) {
     return url.trim().toLowerCase().startsWith("https://");
 }
 
-// كلمات مشبوهة
 function hasSuspiciousWords(url) {
     const lower = url.toLowerCase();
     return suspiciousWords.some(w => lower.includes(w));
 }
 
-// امتداد خطير
 function isRiskyTld(domain) {
     const lower = domain.toLowerCase();
     return riskyTlds.some(tld => lower.endsWith(tld));
 }
 
-// حساب عمر الدومين بالسنوات
 function getDomainAgeYears(createdDateStr) {
     if (!createdDateStr) return 0;
     const created = new Date(createdDateStr);
     if (isNaN(created.getTime())) return 0;
-
     const now = new Date();
     const diffMs = now - created;
     const diffYears = diffMs / (1000 * 60 * 60 * 24 * 365.25);
     return diffYears;
 }
 
-// استدعاء WHOIS API
 async function fetchDomainInfo(domain) {
-    // عدّل الـ endpoint حسب الخدمة اللي تستخدمها فعليًا
     const url = `https://api.whoisfreaks.com/v1.0/whois?apiKey=${API_KEY}&domainName=${domain}&whoisRecordType=all`;
-
     const res = await fetch(url);
-    if (!res.ok) {
-        throw new Error("خطأ في الاتصال بـ WHOIS API");
-    }
-    const data = await res.json();
-    return data;
+    if (!res.ok) throw new Error("خطأ في الاتصال بـ WHOIS API");
+    return await res.json();
 }
