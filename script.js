@@ -1,43 +1,48 @@
-// عناصر أساسية من الـ DOM
+// عناصر DOM
 const canvas = document.getElementById("canvas");
 const linksLayer = document.getElementById("linksLayer");
 const analyzeBtn = document.getElementById("analyzeBtn");
-const connectModeBtn = document.getElementById("connectModeBtn");
 const clearBtn = document.getElementById("clearBtn");
-const saveBtn = document.getElementById("saveBtn");
-const loadBtn = document.getElementById("loadBtn");
 const resultsDiv = document.getElementById("results");
 const modeIndicator = document.getElementById("modeIndicator");
+
+const linkFromSelect = document.getElementById("linkFrom");
+const linkToSelect = document.getElementById("linkTo");
+const cableTypeSelect = document.getElementById("cableType");
+const createLinkBtn = document.getElementById("createLinkBtn");
+const linksListDiv = document.getElementById("linksList");
 
 const pingSourceSelect = document.getElementById("pingSource");
 const pingTargetSelect = document.getElementById("pingTarget");
 const pingBtn = document.getElementById("pingBtn");
 const pingResult = document.getElementById("pingResult");
 
+const saveBtn = document.getElementById("saveBtn");
+const loadBtn = document.getElementById("loadBtn");
+
 // مودال خصائص الجهاز
 const deviceModal = document.getElementById("deviceModal");
 const closeModalBtn = document.getElementById("closeModal");
 const modalDeviceIdSpan = document.getElementById("modalDeviceId");
 const modalDeviceTypeSpan = document.getElementById("modalDeviceType");
+const modalDeviceModelSpan = document.getElementById("modalDeviceModel");
 const modalIpInput = document.getElementById("modalIp");
 const modalVlanInput = document.getElementById("modalVlan");
 const modalLabelInput = document.getElementById("modalLabel");
 const saveDevicePropsBtn = document.getElementById("saveDeviceProps");
 
-// نموذج بيانات داخلي
-let devices = [];      // {id, type, x, y, ip, vlan, label}
-let links = [];        // {id, fromId, toId}
+// نموذج بيانات
+let devices = [];   // {id, type, model, iconClass, x, y, ip, vlan, label}
+let links = [];     // {id, fromId, toId, cableType}
 let deviceCounter = 1;
-
-// وضع التوصيل
-let connectMode = false;
 let selectedDeviceId = null;
-let firstDeviceForLink = null;
 
 // تفعيل السحب من قائمة الأجهزة
 document.querySelectorAll(".device").forEach(device => {
     device.addEventListener("dragstart", e => {
         e.dataTransfer.setData("type", device.dataset.type);
+        e.dataTransfer.setData("model", device.dataset.model);
+        e.dataTransfer.setData("iconClass", device.querySelector(".icon").className.replace("icon ", ""));
     });
 });
 
@@ -47,24 +52,28 @@ canvas.addEventListener("dragover", e => e.preventDefault());
 // عند الإفلات: إنشاء جهاز جديد
 canvas.addEventListener("drop", e => {
     const type = e.dataTransfer.getData("type");
-    if (!type) return;
+    const model = e.dataTransfer.getData("model");
+    const iconClass = e.dataTransfer.getData("iconClass");
+    if (!type || !model) return;
 
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    createDevice(type, x, y);
-    refreshPingDropdowns();
+    createDevice(type, model, iconClass, x, y);
+    refreshDropdowns();
 });
 
 // إنشاء جهاز جديد
-function createDevice(type, x, y) {
+function createDevice(type, model, iconClass, x, y) {
     const id = "D" + deviceCounter++;
     const label = defaultLabelForType(type) + "-" + id;
 
     const device = {
         id,
         type,
+        model,
+        iconClass,
         x,
         y,
         ip: "",
@@ -88,7 +97,7 @@ function defaultLabelForType(type) {
 
 // رسم الأجهزة والروابط
 function renderDevices() {
-    // مسح كل الأجهزة من اللوحة
+    // مسح الأجهزة
     canvas.querySelectorAll(".device-node").forEach(n => n.remove());
 
     devices.forEach(device => {
@@ -105,44 +114,44 @@ function renderDevices() {
         }
 
         const icon = document.createElement("div");
-        icon.className = "icon " + iconClassForType(device.type);
-        icon.textContent = iconTextForType(device.type);
+        icon.className = "icon " + device.iconClass;
+        icon.textContent = iconTextForType(device.type, device.iconClass);
 
         const label = document.createElement("div");
         label.className = "label";
         label.textContent = device.label || device.id;
 
+        const model = document.createElement("div");
+        model.className = "model";
+        model.textContent = device.model;
+
         const ip = document.createElement("div");
         ip.className = "ip";
-        ip.textContent = device.ip ? device.ip + (device.vlan ? " | VLAN " + device.vlan : "") : "بدون IP";
+        ip.textContent = device.ip
+            ? device.ip + (device.vlan ? " | VLAN " + device.vlan : "")
+            : "بدون IP";
 
         inner.appendChild(icon);
         inner.appendChild(label);
+        inner.appendChild(model);
         inner.appendChild(ip);
         node.appendChild(inner);
         canvas.appendChild(node);
 
-        // أحداث النقر
         node.addEventListener("click", () => onDeviceClick(device.id));
-        // سحب الجهاز داخل اللوحة (تحريك)
         makeNodeDraggable(node, device.id);
     });
 
     renderLinks();
+    renderLinksList();
 }
 
-// أيقونة حسب النوع
-function iconClassForType(type) {
-    switch (type) {
-        case "router": return "router-icon";
-        case "switch": return "switch-icon";
-        case "pc": return "pc-icon";
-        case "firewall": return "fw-icon";
-        default: return "";
-    }
-}
-
-function iconTextForType(type) {
+// نص الأيقونة حسب النوع/الإصدار
+function iconTextForType(type, iconClass) {
+    if (iconClass.startsWith("router")) return "R";
+    if (iconClass.startsWith("switch")) return "S";
+    if (iconClass.startsWith("pc")) return "PC";
+    if (iconClass.startsWith("fw")) return "FW";
     switch (type) {
         case "router": return "R";
         case "switch": return "S";
@@ -152,14 +161,13 @@ function iconTextForType(type) {
     }
 }
 
-// جعل الجهاز قابل للتحريك داخل اللوحة
+// جعل الجهاز قابل للتحريك
 function makeNodeDraggable(node, id) {
     let isDragging = false;
     let offsetX = 0;
     let offsetY = 0;
 
     node.addEventListener("mousedown", e => {
-        // لا نسحب إذا ضغط على المودال أو خارج اللوحة
         if (e.button !== 0) return;
         isDragging = true;
         const rect = node.getBoundingClientRect();
@@ -190,7 +198,7 @@ function makeNodeDraggable(node, id) {
     });
 }
 
-// رسم الروابط (الكابلات) باستخدام SVG
+// رسم الروابط (الكابلات) مع ألوان حسب نوع الكيبل
 function renderLinks() {
     linksLayer.innerHTML = "";
     links.forEach(link => {
@@ -203,50 +211,37 @@ function renderLinks() {
         line.setAttribute("y1", from.y);
         line.setAttribute("x2", to.x);
         line.setAttribute("y2", to.y);
-        line.setAttribute("stroke", "#90a4ae");
-        line.setAttribute("stroke-width", "3");
+        line.setAttribute("stroke", cableColor(link.cableType));
+        line.setAttribute("stroke-width", cableWidth(link.cableType));
         line.setAttribute("stroke-linecap", "round");
         linksLayer.appendChild(line);
     });
 }
 
-// عند الضغط على جهاز
-function onDeviceClick(id) {
-    if (connectMode) {
-        handleConnectModeClick(id);
-    } else {
-        selectedDeviceId = id;
-        openDeviceModal(id);
+// لون الكيبل
+function cableColor(type) {
+    switch (type) {
+        case "straight": return "#1e88e5";
+        case "cross": return "#f9a825";
+        case "fiber": return "#8e24aa";
+        case "console": return "#546e7a";
+        default: return "#90a4ae";
     }
-    renderDevices();
 }
 
-// وضع التوصيل: اختيار جهازين لرسم كابل
-function handleConnectModeClick(id) {
-    if (!firstDeviceForLink) {
-        firstDeviceForLink = id;
-        modeIndicator.textContent = "الوضع الحالي: اختيار جهاز ثانٍ للتوصيل...";
-    } else if (firstDeviceForLink === id) {
-        firstDeviceForLink = null;
-        modeIndicator.textContent = "الوضع الحالي: وضع التوصيل (اختر جهازين مختلفين)";
-    } else {
-        // إنشاء رابط
-        const exists = links.some(
-            l =>
-                (l.fromId === firstDeviceForLink && l.toId === id) ||
-                (l.fromId === id && l.toId === firstDeviceForLink)
-        );
-        if (!exists) {
-            links.push({
-                id: "L" + firstDeviceForLink + "-" + id,
-                fromId: firstDeviceForLink,
-                toId: id
-            });
-        }
-        firstDeviceForLink = null;
-        modeIndicator.textContent = "الوضع الحالي: وضع التوصيل (اختر جهازين للتوصيل)";
-        renderDevices();
+// سماكة الكيبل
+function cableWidth(type) {
+    switch (type) {
+        case "fiber": return 4;
+        default: return 3;
     }
+}
+
+// عند الضغط على جهاز
+function onDeviceClick(id) {
+    selectedDeviceId = id;
+    openDeviceModal(id);
+    renderDevices();
 }
 
 // فتح نافذة خصائص الجهاز
@@ -256,6 +251,7 @@ function openDeviceModal(id) {
 
     modalDeviceIdSpan.textContent = dev.id;
     modalDeviceTypeSpan.textContent = typeArabicName(dev.type);
+    modalDeviceModelSpan.textContent = dev.model;
     modalIpInput.value = dev.ip || "";
     modalVlanInput.value = dev.vlan || "";
     modalLabelInput.value = dev.label || "";
@@ -286,7 +282,7 @@ saveDevicePropsBtn.addEventListener("click", () => {
 
     deviceModal.style.display = "none";
     renderDevices();
-    refreshPingDropdowns();
+    refreshDropdowns();
 });
 
 // اسم عربي للنوع
@@ -300,29 +296,181 @@ function typeArabicName(type) {
     }
 }
 
-// تبديل وضع التوصيل
-connectModeBtn.addEventListener("click", () => {
-    connectMode = !connectMode;
-    firstDeviceForLink = null;
-    if (connectMode) {
-        connectModeBtn.classList.add("primary");
-        modeIndicator.textContent = "الوضع الحالي: وضع التوصيل (اختر جهازين للتوصيل)";
-    } else {
-        connectModeBtn.classList.remove("primary");
-        modeIndicator.textContent = "الوضع الحالي: سحب وإفلات الأجهزة";
+// تحديث القوائم (ربط + Ping)
+function refreshDropdowns() {
+    linkFromSelect.innerHTML = "";
+    linkToSelect.innerHTML = "";
+    pingSourceSelect.innerHTML = "";
+    pingTargetSelect.innerHTML = "";
+
+    devices.forEach(d => {
+        const opt1 = document.createElement("option");
+        opt1.value = d.id;
+        opt1.textContent = `${d.label || d.id} [${typeArabicName(d.type)}]`;
+        linkFromSelect.appendChild(opt1);
+
+        const opt2 = document.createElement("option");
+        opt2.value = d.id;
+        opt2.textContent = `${d.label || d.id} [${typeArabicName(d.type)}]`;
+        linkToSelect.appendChild(opt2);
+
+        const optT = document.createElement("option");
+        optT.value = d.id;
+        optT.textContent = `${d.label || d.id} [${typeArabicName(d.type)}]`;
+        pingTargetSelect.appendChild(optT);
+    });
+
+    // Ping المصدر: PCs فقط
+    devices.filter(d => d.type === "pc").forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d.id;
+        opt.textContent = `${d.label || d.id} (${d.ip || "بدون IP"})`;
+        pingSourceSelect.appendChild(opt);
+    });
+}
+
+// إنشاء رابط (كيبل) برمجياً
+createLinkBtn.addEventListener("click", () => {
+    const fromId = linkFromSelect.value;
+    const toId = linkToSelect.value;
+    const cableType = cableTypeSelect.value;
+
+    if (!fromId || !toId) {
+        alert("يرجى اختيار جهازين.");
+        return;
     }
+    if (fromId === toId) {
+        alert("لا يمكن ربط الجهاز بنفسه.");
+        return;
+    }
+
+    const from = devices.find(d => d.id === fromId);
+    const to = devices.find(d => d.id === toId);
+    if (!from || !to) return;
+
+    // التحقق من صحة نوع الكيبل (منطق بسيط)
+    if (!isCableTypeValid(from, to, cableType)) {
+        alert("نوع الكيبل غير مناسب لهذا النوع من الربط (منطق تدريبي).");
+        return;
+    }
+
+    const exists = links.some(
+        l =>
+            (l.fromId === fromId && l.toId === toId) ||
+            (l.fromId === toId && l.toId === fromId)
+    );
+    if (exists) {
+        alert("يوجد رابط مسبق بين هذين الجهازين.");
+        return;
+    }
+
+    const id = "L" + fromId + "-" + toId + "-" + cableType;
+    links.push({ id, fromId, toId, cableType });
+    renderDevices();
 });
+
+// منطق صلاحية نوع الكيبل
+function isCableTypeValid(from, to, cableType) {
+    const t1 = from.type;
+    const t2 = to.type;
+
+    if (cableType === "straight") {
+        // غالباً PC ↔ Switch أو Router ↔ Switch
+        if (
+            (t1 === "pc" && t2 === "switch") ||
+            (t1 === "switch" && t2 === "pc") ||
+            (t1 === "router" && t2 === "switch") ||
+            (t1 === "switch" && t2 === "router")
+        ) return true;
+        return false;
+    }
+
+    if (cableType === "cross") {
+        // Switch ↔ Switch أو PC ↔ PC
+        if (
+            (t1 === "switch" && t2 === "switch") ||
+            (t1 === "pc" && t2 === "pc")
+        ) return true;
+        return false;
+    }
+
+    if (cableType === "fiber") {
+        // غالباً بين Core Devices (Router ↔ Router أو Core Switch ↔ Core Switch)
+        if (
+            (t1 === "router" && t2 === "router") ||
+            (t1 === "switch" && t2 === "switch")
+        ) return true;
+        return false;
+    }
+
+    if (cableType === "console") {
+        // PC ↔ Router/Switch
+        if (
+            (t1 === "pc" && (t2 === "router" || t2 === "switch")) ||
+            (t2 === "pc" && (t1 === "router" || t1 === "switch"))
+        ) return true;
+        return false;
+    }
+
+    return true;
+}
+
+// عرض قائمة الروابط
+function renderLinksList() {
+    linksListDiv.innerHTML = "";
+    if (links.length === 0) {
+        linksListDiv.textContent = "لا توجد روابط حالياً.";
+        return;
+    }
+
+    links.forEach(link => {
+        const from = devices.find(d => d.id === link.fromId);
+        const to = devices.find(d => d.id === link.toId);
+        if (!from || !to) return;
+
+        const div = document.createElement("div");
+        div.className = "link-item";
+
+        const spanInfo = document.createElement("span");
+        spanInfo.textContent =
+            `${from.label || from.id} ↔ ${to.label || to.id} (${cableTypeName(link.cableType)})`;
+
+        const spanRemove = document.createElement("span");
+        spanRemove.className = "link-remove";
+        spanRemove.textContent = "حذف";
+        spanRemove.addEventListener("click", () => {
+            links = links.filter(l => l.id !== link.id);
+            renderDevices();
+        });
+
+        div.appendChild(spanInfo);
+        div.appendChild(spanRemove);
+        linksListDiv.appendChild(div);
+    });
+}
+
+// اسم نوع الكيبل
+function cableTypeName(type) {
+    switch (type) {
+        case "straight": return "Straight-Through";
+        case "cross": return "Cross-Over";
+        case "fiber": return "Fiber";
+        case "console": return "Console";
+        default: return type;
+    }
+}
 
 // مسح اللوحة
 clearBtn.addEventListener("click", () => {
     if (!confirm("هل تريد مسح جميع الأجهزة والروابط؟")) return;
     devices = [];
     links = [];
+    deviceCounter = 1;
     selectedDeviceId = null;
-    firstDeviceForLink = null;
     renderDevices();
+    refreshDropdowns();
     resultsDiv.innerHTML = "";
-    refreshPingDropdowns();
+    pingResult.textContent = "";
 });
 
 // تحليل الأمان
@@ -369,7 +517,7 @@ analyzeBtn.addEventListener("click", () => {
         msgs.push(`<div class="warn">⚠️ توجد عدة VLANs (${Array.from(vlanSet).join(", ")}) بدون وجود راوتر أو جدار ناري يدعم Inter-VLAN Routing.</div>`);
     }
 
-    // فحص وجود أجهزة غير متصلة
+    // أجهزة غير متصلة
     const isolated = devices.filter(d => !links.some(l => l.fromId === d.id || l.toId === d.id));
     if (isolated.length > 0) {
         msgs.push(`<div class="warn">⚠️ توجد أجهزة غير متصلة بالشبكة: ${isolated.map(d => d.label || d.id).join(", ")}</div>`);
@@ -382,30 +530,7 @@ analyzeBtn.addEventListener("click", () => {
     resultsDiv.innerHTML = msgs.join("");
 });
 
-// تحديث قوائم Ping
-function refreshPingDropdowns() {
-    const pcs = devices.filter(d => d.type === "pc");
-    const all = devices;
-
-    pingSourceSelect.innerHTML = "";
-    pingTargetSelect.innerHTML = "";
-
-    pcs.forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d.id;
-        opt.textContent = `${d.label || d.id} (${d.ip || "بدون IP"})`;
-        pingSourceSelect.appendChild(opt);
-    });
-
-    all.forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d.id;
-        opt.textContent = `${d.label || d.id} [${typeArabicName(d.type)}]`;
-        pingTargetSelect.appendChild(opt);
-    });
-}
-
-// محاكاة Ping بسيطة
+// محاكاة Ping
 pingBtn.addEventListener("click", () => {
     const srcId = pingSourceSelect.value;
     const dstId = pingTargetSelect.value;
@@ -432,7 +557,6 @@ pingBtn.addEventListener("click", () => {
         return;
     }
 
-    // منطق بسيط: يجب أن يكون هناك مسار بين الجهازين عبر الروابط
     const reachable = isReachable(srcId, dstId);
     const sameVlanOrRouted = checkVlanReachability(src, dst);
 
@@ -440,7 +564,7 @@ pingBtn.addEventListener("click", () => {
         pingResult.textContent = `Ping ناجح من ${src.label || src.id} إلى ${dst.label || dst.id}`;
         pingResult.style.color = "#2e7d32";
     } else if (!reachable) {
-        pingResult.textContent = "لا يوجد مسار فيزيائي (كابلات) بين الجهازين — فشل Ping.";
+        pingResult.textContent = "لا يوجد مسار فيزيائي (كيابل) بين الجهازين — فشل Ping.";
         pingResult.style.color = "#c62828";
     } else {
         pingResult.textContent = "اختلاف VLAN بدون وجود راوتر/جدار ناري مناسب — فشل Ping.";
@@ -448,7 +572,7 @@ pingBtn.addEventListener("click", () => {
     }
 });
 
-// فحص وجود مسار بين جهازين (بحث بسيط في الرسم البياني)
+// فحص وجود مسار بين جهازين
 function isReachable(srcId, dstId) {
     const visited = new Set();
     const queue = [srcId];
@@ -469,33 +593,26 @@ function isReachable(srcId, dstId) {
     return false;
 }
 
-// فحص VLAN: إذا نفس VLAN أو يوجد راوتر/Firewall بينهما
+// فحص VLAN: نفس VLAN أو وجود راوتر/Firewall في المسار
 function checkVlanReachability(src, dst) {
     if (!src.vlan || !dst.vlan || src.vlan === dst.vlan) return true;
 
-    // إذا VLAN مختلفة، نبحث عن وجود راوتر أو Firewall في المسار
-    // منطق مبسط: إذا يوجد راوتر أو FW في الشبكة ومتصّل بكلا الجانبين (تقريباً)
     const routersOrFw = devices.filter(d => d.type === "router" || d.type === "firewall");
     if (routersOrFw.length === 0) return false;
 
-    // نتحقق إن كان هناك راوتر/Firewall يمكن الوصول إليه من كلا الجهازين
     return routersOrFw.some(dev => isReachable(src.id, dev.id) && isReachable(dev.id, dst.id));
 }
 
-// حفظ التصميم في LocalStorage
+// حفظ التصميم
 saveBtn.addEventListener("click", () => {
-    const data = {
-        devices,
-        links,
-        deviceCounter
-    };
-    localStorage.setItem("networkDesignPro", JSON.stringify(data));
+    const data = { devices, links, deviceCounter };
+    localStorage.setItem("networkDesignUltraPro", JSON.stringify(data));
     alert("تم حفظ التصميم في المتصفح.");
 });
 
 // استرجاع التصميم
 loadBtn.addEventListener("click", () => {
-    const raw = localStorage.getItem("networkDesignPro");
+    const raw = localStorage.getItem("networkDesignUltraPro");
     if (!raw) {
         alert("لا يوجد تصميم محفوظ.");
         return;
@@ -506,8 +623,9 @@ loadBtn.addEventListener("click", () => {
         links = data.links || [];
         deviceCounter = data.deviceCounter || 1;
         renderDevices();
-        refreshPingDropdowns();
+        refreshDropdowns();
         resultsDiv.innerHTML = "";
+        pingResult.textContent = "";
         alert("تم استرجاع التصميم بنجاح.");
     } catch (e) {
         alert("حدث خطأ أثناء قراءة البيانات المحفوظة.");
@@ -516,5 +634,5 @@ loadBtn.addEventListener("click", () => {
 
 // تهيئة أولية
 renderDevices();
-refreshPingDropdowns();
-modeIndicator.textContent = "الوضع الحالي: سحب وإفلات الأجهزة";
+refreshDropdowns();
+modeIndicator.textContent = "الوضع: سحب الأجهزة + ربط برمجي فقط";
