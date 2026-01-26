@@ -2,34 +2,50 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Network Security & Topology Simulator</title>
+    <title>Network Simulator Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>محاكي الشبكات والأمان</h1>
+    <h1>محاكي الشبكات الحديث</h1>
 
     <div class="container">
 
         <!-- قائمة الأجهزة -->
         <div class="devices">
-            <h3>الأجهزة</h3>
-            <div class="device" draggable="true" data-type="router">راوتر</div>
-            <div class="device" draggable="true" data-type="switch">سويتش</div>
-            <div class="device" draggable="true" data-type="pc">حاسب</div>
-            <div class="device" draggable="true" data-type="firewall">جدار ناري</div>
+            <h3>الأجهزة المتاحة</h3>
+
+            <div class="device" draggable="true" data-type="router">
+                <img src="https://img.icons8.com/?size=100&id=48441&format=png" />
+                <p>Cisco ISR 4461</p>
+            </div>
+
+            <div class="device" draggable="true" data-type="switch">
+                <img src="https://img.icons8.com/?size=100&id=48439&format=png" />
+                <p>Catalyst 9300</p>
+            </div>
+
+            <div class="device" draggable="true" data-type="pc">
+                <img src="https://img.icons8.com/?size=100&id=108784&format=png" />
+                <p>Dell OptiPlex 7010</p>
+            </div>
+
+            <div class="device" draggable="true" data-type="firewall">
+                <img src="https://img.icons8.com/?size=100&id=48442&format=png" />
+                <p>FortiGate 100F</p>
+            </div>
+
         </div>
 
         <!-- لوحة الرسم -->
         <div class="canvas" id="canvas">
-            اسحب الأجهزة هنا
+            <p class="hint">اسحب الأجهزة هنا</p>
         </div>
 
     </div>
 
-    <button id="analyzeBtn">تحليل الأمان</button>
+    <button id="analyzeBtn">تحليل أمان الشبكة</button>
 
-    <!-- نافذة النتائج -->
     <div id="results" class="results"></div>
 
     <script src="script.js"></script>
