@@ -2,51 +2,139 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Network Simulator Pro</title>
+    <title>Network Topology & Security Lab Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>محاكي الشبكات الحديث</h1>
+    <header class="app-header">
+        <h1>معمل محاكاة الشبكات والأمان - نسخة برو</h1>
+        <p>سحب وإفلات الأجهزة، توصيلها، تعيين IP و VLAN، تحليل الأمان، ومحاكاة Ping</p>
+    </header>
 
-    <div class="container">
+    <main class="app-main">
 
-        <!-- قائمة الأجهزة -->
-        <div class="devices">
-            <h3>الأجهزة المتاحة</h3>
+        <!-- الشريط الجانبي للأجهزة والإعدادات -->
+        <aside class="sidebar">
 
-            <div class="device" draggable="true" data-type="router">
-                <img src="https://img.icons8.com/?size=100&id=48441&format=png" />
-                <p>Cisco ISR 4461</p>
-            </div>
+            <section class="panel">
+                <h2>الأجهزة المتاحة</h2>
+                <div class="device-list">
 
-            <div class="device" draggable="true" data-type="switch">
-                <img src="https://img.icons8.com/?size=100&id=48439&format=png" />
-                <p>Catalyst 9300</p>
-            </div>
+                    <div class="device" draggable="true" data-type="router">
+                        <div class="icon router-icon"></div>
+                        <div class="device-info">
+                            <strong>Router</strong>
+                            <span>Cisco ISR 4461</span>
+                        </div>
+                    </div>
 
-            <div class="device" draggable="true" data-type="pc">
-                <img src="https://img.icons8.com/?size=100&id=108784&format=png" />
-                <p>Dell OptiPlex 7010</p>
-            </div>
+                    <div class="device" draggable="true" data-type="switch">
+                        <div class="icon switch-icon"></div>
+                        <div class="device-info">
+                            <strong>Switch</strong>
+                            <span>Catalyst 9300</span>
+                        </div>
+                    </div>
 
-            <div class="device" draggable="true" data-type="firewall">
-                <img src="https://img.icons8.com/?size=100&id=48442&format=png" />
-                <p>FortiGate 100F</p>
-            </div>
+                    <div class="device" draggable="true" data-type="pc">
+                        <div class="icon pc-icon"></div>
+                        <div class="device-info">
+                            <strong>PC</strong>
+                            <span>Dell OptiPlex 7010</span>
+                        </div>
+                    </div>
 
-        </div>
+                    <div class="device" draggable="true" data-type="firewall">
+                        <div class="icon fw-icon"></div>
+                        <div class="device-info">
+                            <strong>Firewall</strong>
+                            <span>FortiGate 100F</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="panel">
+                <h2>أدوات التحكم</h2>
+                <div class="controls">
+                    <button id="analyzeBtn" class="btn primary">تحليل أمان الشبكة</button>
+                    <button id="connectModeBtn" class="btn">وضع التوصيل (رسم كابلات)</button>
+                    <button id="clearBtn" class="btn danger">مسح اللوحة</button>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h2>حفظ واسترجاع</h2>
+                <div class="controls">
+                    <button id="saveBtn" class="btn">حفظ التصميم (LocalStorage)</button>
+                    <button id="loadBtn" class="btn">استرجاع آخر تصميم</button>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h2>محاكاة Ping</h2>
+                <div class="ping-form">
+                    <label>الجهاز المصدر:</label>
+                    <select id="pingSource"></select>
+
+                    <label>الجهاز الهدف:</label>
+                    <select id="pingTarget"></select>
+
+                    <button id="pingBtn" class="btn">تنفيذ Ping</button>
+                    <div id="pingResult" class="ping-result"></div>
+                </div>
+            </section>
+
+        </aside>
 
         <!-- لوحة الرسم -->
-        <div class="canvas" id="canvas">
-            <p class="hint">اسحب الأجهزة هنا</p>
+        <section class="canvas-wrapper">
+            <div class="canvas-toolbar">
+                <span>لوحة الشبكة</span>
+                <span id="modeIndicator">الوضع الحالي: سحب وإفلات الأجهزة</span>
+            </div>
+
+            <div class="canvas" id="canvas">
+                <p class="hint">اسحب الأجهزة من اليسار وضعها هنا، ثم استخدم وضع التوصيل لرسم الكابلات.</p>
+                <svg id="linksLayer"></svg>
+            </div>
+
+            <section class="panel results-panel">
+                <h2>نتائج تحليل الأمان</h2>
+                <div id="results" class="results"></div>
+            </section>
+        </section>
+
+        <!-- نافذة خصائص الجهاز -->
+        <div id="deviceModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <h2>خصائص الجهاز</h2>
+                <div class="modal-body">
+                    <p><strong>المعرف:</strong> <span id="modalDeviceId"></span></p>
+                    <p><strong>النوع:</strong> <span id="modalDeviceType"></span></p>
+
+                    <label>عنوان IP:</label>
+                    <input type="text" id="modalIp" placeholder="مثال: 192.168.1.10">
+
+                    <label>VLAN:</label>
+                    <input type="number" id="modalVlan" placeholder="مثال: 10">
+
+                    <label>وصف الجهاز:</label>
+                    <input type="text" id="modalLabel" placeholder="مثال: PC-Admin">
+
+                    <button id="saveDeviceProps" class="btn primary full">حفظ التعديلات</button>
+                </div>
+            </div>
         </div>
 
-    </div>
+    </main>
 
-    <button id="analyzeBtn">تحليل أمان الشبكة</button>
-
-    <div id="results" class="results"></div>
+    <footer class="app-footer">
+        <span>مشروع شبكات متكامل بثلاث ملفات فقط (HTML / CSS / JS)</span>
+    </footer>
 
     <script src="script.js"></script>
 </body>
