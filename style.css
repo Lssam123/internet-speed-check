@@ -1,4 +1,3 @@
-/* إعدادات عامة */
 * {
     box-sizing: border-box;
 }
@@ -15,7 +14,7 @@ body {
 .app-header {
     text-align: center;
     padding: 15px 10px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     color: #e3f2fd;
     border-bottom: 1px solid rgba(255,255,255,0.2);
 }
@@ -27,7 +26,7 @@ body {
 
 .app-header p {
     margin: 0;
-    font-size: 14px;
+    font-size: 13px;
     opacity: 0.9;
 }
 
@@ -39,7 +38,7 @@ body {
 
 /* الشريط الجانبي */
 .sidebar {
-    width: 280px;
+    width: 310px;
     padding: 10px;
     background: #f5f7fb;
     border-left: 1px solid #cfd8dc;
@@ -55,27 +54,39 @@ body {
 }
 
 .panel h2 {
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     font-size: 16px;
     color: #0d47a1;
 }
 
-/* قائمة الأجهزة */
-.device-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.panel-note {
+    font-size: 11px;
+    color: #607d8b;
+    margin: 0 0 6px 0;
 }
 
+/* مجموعات الأجهزة */
+.device-group {
+    margin-bottom: 8px;
+}
+
+.device-group h3 {
+    margin: 4px 0;
+    font-size: 13px;
+    color: #37474f;
+}
+
+/* الأجهزة */
 .device {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px;
+    padding: 7px;
     background: #e3f2fd;
     border-radius: 8px;
     cursor: grab;
     transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    margin-bottom: 5px;
 }
 
 .device:hover {
@@ -86,7 +97,7 @@ body {
 
 .device-info strong {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .device-info span {
@@ -94,7 +105,7 @@ body {
     color: #455a64;
 }
 
-/* أيقونات الأجهزة (بدون صور خارجية) */
+/* أيقونات الأجهزة لكل إصدار */
 .icon {
     width: 34px;
     height: 34px;
@@ -103,24 +114,40 @@ body {
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
 }
 
-.router-icon {
+/* Routers */
+.router1 {
     background: linear-gradient(135deg, #1e88e5, #0d47a1);
 }
+.router2 {
+    background: linear-gradient(135deg, #42a5f5, #1565c0);
+}
 
-.switch-icon {
+/* Switches */
+.switch1 {
     background: linear-gradient(135deg, #43a047, #1b5e20);
 }
-
-.pc-icon {
-    background: linear-gradient(135deg, #8e24aa, #4a148c);
+.switch2 {
+    background: linear-gradient(135deg, #66bb6a, #2e7d32);
 }
 
-.fw-icon {
+/* PCs */
+.pc1 {
+    background: linear-gradient(135deg, #8e24aa, #4a148c);
+}
+.pc2 {
+    background: linear-gradient(135deg, #ab47bc, #6a1b9a);
+}
+
+/* Firewalls */
+.fw1 {
     background: linear-gradient(135deg, #e53935, #b71c1c);
+}
+.fw2 {
+    background: linear-gradient(135deg, #ef5350, #c62828);
 }
 
 /* الأزرار */
@@ -207,7 +234,7 @@ body {
     font-size: 12px;
 }
 
-/* طبقة الروابط (الكابلات) */
+/* طبقة الروابط */
 #linksLayer {
     position: absolute;
     inset: 0;
@@ -219,7 +246,7 @@ body {
 /* الأجهزة على اللوحة */
 .device-node {
     position: absolute;
-    width: 80px;
+    width: 90px;
     text-align: center;
     cursor: pointer;
     user-select: none;
@@ -249,6 +276,11 @@ body {
     color: #263238;
 }
 
+.device-node .model {
+    font-size: 10px;
+    color: #607d8b;
+}
+
 .device-node .ip {
     font-size: 10px;
     color: #546e7a;
@@ -260,7 +292,7 @@ body {
     border-radius: 10px;
     padding: 8px 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    max-height: 180px;
+    max-height: 200px;
     overflow-y: auto;
 }
 
@@ -300,7 +332,60 @@ body {
     font-size: 12px;
 }
 
-/* المودال (خصائص الجهاز) */
+/* قائمة الروابط */
+.links-list {
+    font-size: 12px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.link-item {
+    padding: 4px 3px;
+    border-bottom: 1px dashed #cfd8dc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.link-item span {
+    margin-left: 4px;
+}
+
+.link-remove {
+    font-size: 11px;
+    color: #c62828;
+    cursor: pointer;
+}
+
+/* أنواع الكيابل */
+.cable-legend {
+    margin-top: 6px;
+    font-size: 11px;
+}
+
+.cable {
+    display: inline-block;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin: 2px;
+    color: #fff;
+    font-size: 10px;
+}
+
+.cable.straight {
+    background: #1e88e5;
+}
+.cable.cross {
+    background: #f9a825;
+}
+.cable.fiber {
+    background: #8e24aa;
+}
+.cable.console {
+    background: #546e7a;
+}
+
+/* المودال */
 .modal {
     display: none;
     position: fixed;
@@ -362,18 +447,21 @@ body {
 
 /* سكرول لطيف */
 .sidebar,
-.results-panel {
+.results-panel,
+.links-list {
     scrollbar-width: thin;
     scrollbar-color: #90a4ae #eceff1;
 }
 
 .sidebar::-webkit-scrollbar,
-.results-panel::-webkit-scrollbar {
+.results-panel::-webkit-scrollbar,
+.links-list::-webkit-scrollbar {
     width: 6px;
 }
 
 .sidebar::-webkit-scrollbar-thumb,
-.results-panel::-webkit-scrollbar-thumb {
+.results-panel::-webkit-scrollbar-thumb,
+.links-list::-webkit-scrollbar-thumb {
     background: #90a4ae;
     border-radius: 3px;
 }
