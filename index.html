@@ -2,81 +2,160 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Network Topology & Security Lab Pro</title>
+    <title>Network Lab Ultra Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="app-header">
-        <h1>معمل محاكاة الشبكات والأمان - نسخة برو</h1>
-        <p>سحب وإفلات الأجهزة، توصيلها، تعيين IP و VLAN، تحليل الأمان، ومحاكاة Ping</p>
+        <h1>معمل محاكاة الشبكات والأمان - Ultra Pro</h1>
+        <p>أجهزة متعددة الإصدارات، أنواع كيابل، ربط برمجي، IP/VLAN، تحليل أمان، ومحاكاة Ping</p>
     </header>
 
     <main class="app-main">
 
-        <!-- الشريط الجانبي للأجهزة والإعدادات -->
+        <!-- الشريط الجانبي -->
         <aside class="sidebar">
 
+            <!-- الأجهزة المتاحة -->
             <section class="panel">
                 <h2>الأجهزة المتاحة</h2>
-                <div class="device-list">
+                <p class="panel-note">اختر الإصدار ثم اسحبه إلى اللوحة</p>
 
-                    <div class="device" draggable="true" data-type="router">
-                        <div class="icon router-icon"></div>
+                <div class="device-group">
+                    <h3>Routers</h3>
+                    <div class="device" draggable="true"
+                         data-type="router" data-model="Cisco ISR 4461" data-icon="R1">
+                        <div class="icon router1"></div>
                         <div class="device-info">
-                            <strong>Router</strong>
-                            <span>Cisco ISR 4461</span>
+                            <strong>Cisco ISR 4461</strong>
+                            <span>Enterprise Router</span>
                         </div>
                     </div>
 
-                    <div class="device" draggable="true" data-type="switch">
-                        <div class="icon switch-icon"></div>
+                    <div class="device" draggable="true"
+                         data-type="router" data-model="Cisco ASR 1001-X" data-icon="R2">
+                        <div class="icon router2"></div>
                         <div class="device-info">
-                            <strong>Switch</strong>
-                            <span>Catalyst 9300</span>
+                            <strong>Cisco ASR 1001-X</strong>
+                            <span>Aggregation Router</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-group">
+                    <h3>Switches</h3>
+                    <div class="device" draggable="true"
+                         data-type="switch" data-model="Catalyst 9300" data-icon="S1">
+                        <div class="icon switch1"></div>
+                        <div class="device-info">
+                            <strong>Catalyst 9300</strong>
+                            <span>Access Switch</span>
                         </div>
                     </div>
 
-                    <div class="device" draggable="true" data-type="pc">
-                        <div class="icon pc-icon"></div>
+                    <div class="device" draggable="true"
+                         data-type="switch" data-model="Catalyst 9500" data-icon="S2">
+                        <div class="icon switch2"></div>
                         <div class="device-info">
-                            <strong>PC</strong>
-                            <span>Dell OptiPlex 7010</span>
+                            <strong>Catalyst 9500</strong>
+                            <span>Core Switch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-group">
+                    <h3>PCs</h3>
+                    <div class="device" draggable="true"
+                         data-type="pc" data-model="Dell OptiPlex 7010" data-icon="P1">
+                        <div class="icon pc1"></div>
+                        <div class="device-info">
+                            <strong>Dell OptiPlex 7010</strong>
+                            <span>Office PC</span>
                         </div>
                     </div>
 
-                    <div class="device" draggable="true" data-type="firewall">
-                        <div class="icon fw-icon"></div>
+                    <div class="device" draggable="true"
+                         data-type="pc" data-model="HP EliteDesk 800 G6" data-icon="P2">
+                        <div class="icon pc2"></div>
                         <div class="device-info">
-                            <strong>Firewall</strong>
-                            <span>FortiGate 100F</span>
+                            <strong>HP EliteDesk 800 G6</strong>
+                            <span>Business PC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-group">
+                    <h3>Firewalls</h3>
+                    <div class="device" draggable="true"
+                         data-type="firewall" data-model="FortiGate 100F" data-icon="F1">
+                        <div class="icon fw1"></div>
+                        <div class="device-info">
+                            <strong>FortiGate 100F</strong>
+                            <span>Next-Gen Firewall</span>
                         </div>
                     </div>
 
+                    <div class="device" draggable="true"
+                         data-type="firewall" data-model="Cisco Firepower 1120" data-icon="F2">
+                        <div class="icon fw2"></div>
+                        <div class="device-info">
+                            <strong>Cisco Firepower 1120</strong>
+                            <span>NGFW Appliance</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
+            <!-- أدوات التحكم العامة -->
             <section class="panel">
                 <h2>أدوات التحكم</h2>
                 <div class="controls">
                     <button id="analyzeBtn" class="btn primary">تحليل أمان الشبكة</button>
-                    <button id="connectModeBtn" class="btn">وضع التوصيل (رسم كابلات)</button>
                     <button id="clearBtn" class="btn danger">مسح اللوحة</button>
                 </div>
             </section>
 
+            <!-- ربط الأجهزة (برمجي فقط) -->
             <section class="panel">
-                <h2>حفظ واسترجاع</h2>
-                <div class="controls">
-                    <button id="saveBtn" class="btn">حفظ التصميم (LocalStorage)</button>
-                    <button id="loadBtn" class="btn">استرجاع آخر تصميم</button>
+                <h2>إنشاء رابط (كيبل)</h2>
+                <p class="panel-note">اختر جهازين ونوع الكيبل</p>
+
+                <label>الجهاز الأول:</label>
+                <select id="linkFrom"></select>
+
+                <label>الجهاز الثاني:</label>
+                <select id="linkTo"></select>
+
+                <label>نوع الكيبل:</label>
+                <select id="cableType">
+                    <option value="straight">Straight-Through (PC ↔ Switch)</option>
+                    <option value="cross">Cross-Over (Switch ↔ Switch / PC ↔ PC)</option>
+                    <option value="fiber">Fiber (Core Links)</option>
+                    <option value="console">Console (PC ↔ Router/Switch)</option>
+                </select>
+
+                <button id="createLinkBtn" class="btn">إنشاء الرابط</button>
+
+                <div class="cable-legend">
+                    <span class="cable straight">Straight</span>
+                    <span class="cable cross">Cross</span>
+                    <span class="cable fiber">Fiber</span>
+                    <span class="cable console">Console</span>
                 </div>
             </section>
 
+            <!-- قائمة الروابط -->
+            <section class="panel">
+                <h2>الروابط الحالية</h2>
+                <div id="linksList" class="links-list"></div>
+            </section>
+
+            <!-- محاكاة Ping -->
             <section class="panel">
                 <h2>محاكاة Ping</h2>
                 <div class="ping-form">
-                    <label>الجهاز المصدر:</label>
+                    <label>الجهاز المصدر (PC فقط):</label>
                     <select id="pingSource"></select>
 
                     <label>الجهاز الهدف:</label>
@@ -87,17 +166,26 @@
                 </div>
             </section>
 
+            <!-- حفظ واسترجاع -->
+            <section class="panel">
+                <h2>حفظ واسترجاع</h2>
+                <div class="controls">
+                    <button id="saveBtn" class="btn">حفظ التصميم</button>
+                    <button id="loadBtn" class="btn">استرجاع التصميم</button>
+                </div>
+            </section>
+
         </aside>
 
         <!-- لوحة الرسم -->
         <section class="canvas-wrapper">
             <div class="canvas-toolbar">
                 <span>لوحة الشبكة</span>
-                <span id="modeIndicator">الوضع الحالي: سحب وإفلات الأجهزة</span>
+                <span id="modeIndicator">الوضع: سحب الأجهزة + ربط برمجي</span>
             </div>
 
             <div class="canvas" id="canvas">
-                <p class="hint">اسحب الأجهزة من اليسار وضعها هنا، ثم استخدم وضع التوصيل لرسم الكابلات.</p>
+                <p class="hint">اسحب الأجهزة من اليسار وضعها هنا، ثم اربطها من نموذج "إنشاء رابط".</p>
                 <svg id="linksLayer"></svg>
             </div>
 
@@ -115,6 +203,7 @@
                 <div class="modal-body">
                     <p><strong>المعرف:</strong> <span id="modalDeviceId"></span></p>
                     <p><strong>النوع:</strong> <span id="modalDeviceType"></span></p>
+                    <p><strong>الإصدار:</strong> <span id="modalDeviceModel"></span></p>
 
                     <label>عنوان IP:</label>
                     <input type="text" id="modalIp" placeholder="مثال: 192.168.1.10">
@@ -133,7 +222,7 @@
     </main>
 
     <footer class="app-footer">
-        <span>مشروع شبكات متكامل بثلاث ملفات فقط (HTML / CSS / JS)</span>
+        <span>مشروع شبكات متقدم بثلاث ملفات فقط (HTML / CSS / JS)</span>
     </footer>
 
     <script src="script.js"></script>
