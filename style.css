@@ -1,78 +1,379 @@
-body {
-    font-family: "Cairo", sans-serif;
-    direction: rtl;
-    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-    text-align: center;
+/* إعدادات عامة */
+* {
+    box-sizing: border-box;
 }
 
-h1 {
-    margin-top: 20px;
+body {
+    margin: 0;
+    font-family: "Cairo", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    direction: rtl;
+    background: radial-gradient(circle at top, #1e3c72, #2a5298);
+    color: #0d1b2a;
+}
+
+/* الهيدر */
+.app-header {
+    text-align: center;
+    padding: 15px 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e3f2fd;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.app-header h1 {
+    margin: 5px 0;
+    font-size: 24px;
+}
+
+.app-header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* الهيكل الرئيسي */
+.app-main {
+    display: flex;
+    height: calc(100vh - 110px);
+}
+
+/* الشريط الجانبي */
+.sidebar {
+    width: 280px;
+    padding: 10px;
+    background: #f5f7fb;
+    border-left: 1px solid #cfd8dc;
+    overflow-y: auto;
+}
+
+.panel {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.panel h2 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
     color: #0d47a1;
 }
 
-.container {
+/* قائمة الأجهزة */
+.device-list {
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.devices {
-    width: 200px;
-    padding: 15px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    flex-direction: column;
+    gap: 8px;
 }
 
 .device {
-    padding: 10px;
-    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
     background: #e3f2fd;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: grab;
-    transition: 0.2s;
-    text-align: center;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 .device:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(33,150,243,0.3);
     background: #bbdefb;
 }
 
-.device img {
-    width: 60px;
-    height: 60px;
+.device-info strong {
+    display: block;
+    font-size: 14px;
+}
+
+.device-info span {
+    font-size: 11px;
+    color: #455a64;
+}
+
+/* أيقونات الأجهزة (بدون صور خارجية) */
+.icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.router-icon {
+    background: linear-gradient(135deg, #1e88e5, #0d47a1);
+}
+
+.switch-icon {
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+}
+
+.pc-icon {
+    background: linear-gradient(135deg, #8e24aa, #4a148c);
+}
+
+.fw-icon {
+    background: linear-gradient(135deg, #e53935, #b71c1c);
+}
+
+/* الأزرار */
+.btn {
+    display: inline-block;
+    padding: 6px 10px;
+    margin: 4px 0;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    background: #eceff1;
+    color: #263238;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
+}
+
+.btn:hover {
+    background: #cfd8dc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.btn.primary {
+    background: #1e88e5;
+    color: #ffffff;
+}
+
+.btn.primary:hover {
+    background: #1565c0;
+}
+
+.btn.danger {
+    background: #e53935;
+    color: #ffffff;
+}
+
+.btn.danger:hover {
+    background: #c62828;
+}
+
+.btn.full {
+    width: 100%;
+}
+
+/* لوحة الرسم */
+.canvas-wrapper {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.canvas-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 10px 10px 0 0;
+    padding: 8px 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    font-size: 13px;
+}
+
+#modeIndicator {
+    color: #1565c0;
+    font-weight: 600;
 }
 
 .canvas {
-    width: 700px;
-    height: 450px;
-    background: white;
-    border: 3px dashed #90caf9;
-    border-radius: 12px;
-    margin-right: 20px;
     position: relative;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    flex: 1;
+    background: #fafafa;
+    border-radius: 0 0 10px 10px;
+    border: 1px solid #cfd8dc;
+    margin-bottom: 10px;
+    overflow: hidden;
 }
 
-.device-icon {
+.canvas .hint {
     position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #90a4ae;
+    font-size: 12px;
+}
+
+/* طبقة الروابط (الكابلات) */
+#linksLayer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* الأجهزة على اللوحة */
+.device-node {
+    position: absolute;
+    width: 80px;
     text-align: center;
     cursor: pointer;
+    user-select: none;
+    transform: translate(-50%, -50%);
 }
 
-.device-icon img {
-    width: 70px;
+.device-node-inner {
+    padding: 6px 4px;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    border: 2px solid transparent;
+    transition: border 0.15s, transform 0.1s;
+}
+
+.device-node-inner.selected {
+    border-color: #ffb300;
+    transform: scale(1.03);
+}
+
+.device-node .icon {
+    margin: 0 auto 4px auto;
+}
+
+.device-node .label {
+    font-size: 11px;
+    color: #263238;
+}
+
+.device-node .ip {
+    font-size: 10px;
+    color: #546e7a;
+}
+
+/* نتائج التحليل */
+.results-panel {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    max-height: 180px;
+    overflow-y: auto;
 }
 
 .results {
-    margin-top: 20px;
-    padding: 15px;
-    background: white;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 10px;
+    font-size: 13px;
+}
+
+.results .ok {
+    color: #2e7d32;
+}
+
+.results .warn {
+    color: #f9a825;
+}
+
+.results .err {
+    color: #c62828;
+}
+
+/* نموذج Ping */
+.ping-form label {
+    display: block;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.ping-form select {
+    width: 100%;
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid #cfd8dc;
+    font-size: 12px;
+}
+
+.ping-result {
+    margin-top: 6px;
+    font-size: 12px;
+}
+
+/* المودال (خصائص الجهاز) */
+.modal {
     display: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 10px;
+    width: 320px;
+    max-width: 90%;
+    padding: 12px 14px 16px 14px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #0d47a1;
+}
+
+.modal-body label {
+    display: block;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.modal-body input {
+    width: 100%;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #cfd8dc;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.close {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #546e7a;
+}
+
+/* الفوتر */
+.app-footer {
+    text-align: center;
+    padding: 6px;
+    font-size: 11px;
+    color: #e3f2fd;
+    background: rgba(0,0,0,0.2);
+}
+
+/* سكرول لطيف */
+.sidebar,
+.results-panel {
+    scrollbar-width: thin;
+    scrollbar-color: #90a4ae #eceff1;
+}
+
+.sidebar::-webkit-scrollbar,
+.results-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.results-panel::-webkit-scrollbar-thumb {
+    background: #90a4ae;
+    border-radius: 3px;
 }
